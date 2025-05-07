@@ -2168,7 +2168,7 @@ do
             }
             --
             local keybindslist_title = utility:Create("TextLabel", {Vector2.new(keybindslist_outline.Size.X/2,4), keybindslist_outline}, {
-                Text = "Keybinds",
+                Text = "[ Keybinds ]",
                 Size = theme.textsize,
                 Font = theme.font,
                 Color = theme.textcolor,
@@ -2176,7 +2176,7 @@ do
                 Center = true,
                 Hidden = false,
                 ZIndex = 55,
-                Position = utility:Position(0.0, 0, 0, 0, keybindslist_outline),
+                Position = utility:Position(0.5, 0, 0, 5, keybindslist_outline),
                 Visible = window.keybindslist.visible
             })
             --
