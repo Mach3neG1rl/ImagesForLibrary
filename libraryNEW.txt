@@ -1,4 +1,4 @@
--- // Variables
+        -- // Variables
 local ws, uis, rs, hs, cas, plrs, stats = game:GetService("Workspace"), game:GetService("UserInputService"), game:GetService("RunService"), game:GetService("HttpService"), game:GetService("ContextActionService"), game:GetService("Players"), game:GetService("Stats")
 --
 local localplayer = plrs.LocalPlayer
@@ -1148,7 +1148,7 @@ do
         --
         theme.accent = accent
         --
-        local window = {pages = {}, loader = style == 2, init = false, pageammount = pageammount, isVisible = false, callback = callback, uibind = Enum.KeyCode.Z, wminfo = " Tricked | Ping : %s | Fps : %u", currentPage = nil, fading = false, dragging = false, drag = Vector2.new(0,0), currentContent = {frame = nil, dropdown = nil, multibox = nil, colorpicker = nil, keybind = nil, textbox = nil}}
+        local window = {pages = {}, loader = style == 2, init = false, pageammount = pageammount, isVisible = false, callback = callback, uibind = Enum.KeyCode.Z, wminfo = "Tricked | Ping : %s | Fps : %u", currentPage = nil, fading = false, dragging = false, drag = Vector2.new(0,0), currentContent = {frame = nil, dropdown = nil, multibox = nil, colorpicker = nil, keybind = nil, textbox = nil}}
         --
         local main_frame = utility:Create("Frame", {Vector2.new(0,0)}, {
             Size = utility:Size(0, size.X, 0, size.Y),
@@ -2019,7 +2019,7 @@ do
             --
             local watermark_frame = utility:Create("Frame", {Vector2.new(1,1), watermark_inline}, {
                 Size = utility:Size(1, -2, 1, -2, watermark_inline),
-                Position = utility:Position(0, 1, 0, 1, watermark_inline),
+                Position = utility:Position(0, 0, 0, 0, watermark_inline),
                 Hidden = false,
                 ZIndex = 60.2,
                 Color = theme.lightcontrast,
