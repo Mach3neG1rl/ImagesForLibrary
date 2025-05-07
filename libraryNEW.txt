@@ -3822,52 +3822,76 @@ do
         --
         local lastselection
         --
-        function playerList:Refresh(Relation)
-            for Index, Value in pairs(playerList.items) do
-                local Found = playerList.players[Index + playerList.scrollingindex]
-                --
-                if Found then
-                    Value:Set(true, Found)
+    function playerList:Refresh(Relation)
+    for Index, Value in pairs(playerList.items) do
+        local Found = playerList.players[Index + playerList.scrollingindex]
+        --
+        if Found then
+            Value:Set(true, Found)
+        else
+            Value:Set(false)
+        end
+    end
+    --
+    if Relation then
+        library.Relations[Relation[1].UserId] = Relation[3] ~= "None" and Relation[3] or nil
+    end
+    --
+    playerList_title.Text = ("Player List - %s Players"):format(#playerList.items - 1)
+    --
+    local Selection = playerList:GetSelection()
+    --
+    playerList.buttons[1]:Update(Selection)
+    --
+    window:Move(window.main_frame.Position)
+    --
+    if Selection then
+        if lastselection ~= Selection then
+            lastselection = Selection
+            --
+            options_avatar.Data = ""
+            options_loadingtext.Text = "..?"
+            --
+            options_title.Text = ("User ID : %s\nDisplay Name : %s\nName : %s\nHealth : %s/%s"):format(Selection[1].UserId, Selection[1].DisplayName ~= "" and Selection[1].DisplayName or Selection[1].Name, Selection[1].Name, "100", "100")
+
+            pcall(function()
+                local Players = game:GetService("Players")
+                local thumbType = Enum.ThumbnailType.HeadShot
+                local thumbSize = Enum.ThumbnailSize.Size100x100
+                
+                local content = nil
+                local success, result = pcall(function()
+                    return Players:GetUserThumbnailAsync(Selection[1].UserId, thumbType, thumbSize)
+                end)
+                
+                if success and result then
+                    content = result
                 else
-                    Value:Set(false)
-                end
-            end
-            --
-            if Relation then
-                library.Relations[Relation[1].UserId] = Relation[3] ~= "None" and Relation[3] or nil
-            end
-            --
-            playerList_title.Text = ("Player List - %s Players"):format(#playerList.items - 1)
-            --
-            local Selection = playerList:GetSelection()
-            --
-            playerList.buttons[1]:Update(Selection)
-            --
-            window:Move(window.main_frame.Position)
-            --
-            if Selection then
-                if lastselection ~= Selection then
-                    lastselection = Selection
-                    --
-                    options_avatar.Data = ""
-                    options_loadingtext.Text = "..?"
-                    --
-                    options_title.Text = ("User ID : %s\nDisplay Name : %s\nName : %s\nHealth : %s/%s"):format(Selection[1].UserId, Selection[1].DisplayName ~= "" and Selection[1].DisplayName or Selection[1].Name, Selection[1].Name, "100", "100")
-                    --
-                    local imagedata = game:HttpGet(("https://www.roblox.com/headshot-thumbnail/image?userId=%s&width=100&height=100&format=png"):format(Selection[1].UserId))
-                    --
-                    if playerList:GetSelection() == Selection then
-                        options_avatar.Data = imagedata
-                        options_loadingtext.Text = ""
+                    local success2, result2 = pcall(function()
+                        local HttpService = game:GetService('HttpService')
+                        local response = HttpService:JSONDecode(HttpService:GetAsync("https://thumbnails.roproxy.com/v1/users/avatar-headshot?userIds="..Selection[1].UserId.."&size=100x100&format=Png"))
+                        return game:HttpGet(response.data[1].imageUrl)
+                    end)
+                    
+                    if success2 and result2 then
+                        content = result2
                     end
                 end
-            else
-                options_title.Text = "No player selected."
-                options_avatar.Data = ""
-                options_loadingtext.Text = "..?"
-                lastselection = nil
-            end
+                
+                if playerList:GetSelection() == Selection and content then
+                    options_avatar.Data = content
+                    options_loadingtext.Text = ""
+                end
+            end)
         end
+    else
+        options_title.Text = "No player selected."
+        options_avatar.Data = ""
+        options_loadingtext.Text = "..?"
+        lastselection = nil
+    end
+end
+
         --
         function playerList:Update() end
         --
