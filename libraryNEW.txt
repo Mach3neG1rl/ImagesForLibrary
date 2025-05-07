@@ -2092,12 +2092,14 @@ do
                 library.shared.fps = math.floor(1 / math.abs(temp - tick()))
                 temp = tick()
                 library.shared.ping = stats.Network:FindFirstChild("ServerStatsItem") and tostring(math.round(stats.Network.ServerStatsItem["Data Ping"]:GetValue())) or "Unknown"
-                --
+    
+                local currentTime = os.date("%H:%M:%S")
+    
                 task.spawn(function()
                     if (tick() - Tick) > 0.15 then
-                        watermark_title.Text = window.wminfo:gsub("$PING", library.shared.ping):gsub("$FPS", library.shared.fps)
+                        watermark_title.Text = window.wminfo:gsub("$PING", library.shared.ping):gsub("$FPS", library.shared.fps):gsub("$TIME", currentTime)
                         window.watermark:UpdateSize()
-                        --
+            
                         Tick = tick()
                     end
                 end)
