@@ -558,6 +558,32 @@ do
         return ws.CurrentCamera.ViewportSize
     end
     --
+
+function library:PreloadImages()
+    local images = {
+        {"gradient", "https://raw.githubusercontent.com/Mach3neG1rl/ImagesForLibrary/refs/heads/main/gradientdown.png"},
+        {"gradient_down", "https://raw.githubusercontent.com/Mach3neG1rl/ImagesForLibrary/refs/heads/main/gradientdown.png"},
+    }
+        
+    for _, image in pairs(images) do
+        local imageName, imageLink = image[1], image[2]
+        local uniqueFileName = imageName .. "_" .. imageLink:gsub("[^%w]", ""):sub(1, 10)
+        local uniquePath = library.folders.assets.."/"..uniqueFileName..".png"
+        
+        if not isfile(uniquePath) then
+            pcall(function()
+                local data = game:HttpGet(imageLink)
+                if data then
+                    writefile(uniquePath, data)
+                end
+            end)
+        else
+            print("Уже существует: " .. imageName)
+        end
+        wait(0.1)
+    end
+end
+
 function utility:LoadImage(instance, imageName, imageLink)
     local data
     local filePath = library.folders.assets.."/"..imageName..".png"
