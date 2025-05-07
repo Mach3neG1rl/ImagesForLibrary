@@ -2140,9 +2140,9 @@ do
             --
             local info = info or {}
             --
-            local keybindslist_outline = utility:Create("Frame", {Vector2.new(10,(utility:GetScreenSize().Y/2)-200)}, {
+            local keybindslist_outline = utility:Create("Frame", {Vector2.new(5, 35)}, {
                 Size = utility:Size(0, 180, 0, 22),
-                Position = utility:Position(0, 10, 0.4, 0),
+                Position = utility:Position(0, 5, 0, 35),
                 Hidden = false,
                 ZIndex = 55,
                 Color = theme.outline,
