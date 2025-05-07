@@ -2117,7 +2117,7 @@ do
             --
             local keybindslist_outline = utility:Create("Frame", {Vector2.new(5, 35)}, {
                 Size = utility:Size(0, 180, 0, 22),
-                Position = utility:Position(0, 10, 1, -35),
+                Position = utility:Position(0, 10, 1, -10),
                 Hidden = false,
                 ZIndex = 55,
                 Color = theme.outline,
