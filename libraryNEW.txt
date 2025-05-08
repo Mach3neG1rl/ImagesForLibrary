@@ -2043,6 +2043,7 @@ library.changed[#library.changed + 1] = function()
         )
         
         watermark_outline.Position = newPosition
+        
         utility:UpdateOffset(watermark_inline, {Vector2.new(1, 1), watermark_outline})
         utility:UpdateOffset(watermark_frame, {Vector2.new(1, 1), watermark_inline})
         utility:UpdateOffset(watermark_accent, {Vector2.new(0, 0), watermark_frame})
