@@ -2212,7 +2212,7 @@ library.changed[#library.changed + 1] = function()
         keybindslist_inline.Position = Vector2.new(keybindslist_outline.Position.X + 1, keybindslist_outline.Position.Y + 1)
         keybindslist_frame.Position = Vector2.new(keybindslist_inline.Position.X + 1, keybindslist_inline.Position.Y + 1)
         keybindslist_accent.Position = Vector2.new(keybindslist_frame.Position.X, keybindslist_frame.Position.Y)
-        keybindslist_title.Position = utility:Position(0, 2, 0, 4, keybindslist_outline)
+        keybindslist_title.Position = utility:Position(0.5, 0, 0, 5, keybindslist_outline)
         
         window.keybindslist:Resort()
     end
