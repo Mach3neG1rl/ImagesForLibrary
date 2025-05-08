@@ -2009,49 +2009,6 @@ do
                 watermark_frame.Size = utility:Size(1, -2, 1, -2, watermark_inline)
                 watermark_accent.Size = utility:Size(1, 0, 0, 1, watermark_frame)
             end
-
-            function window:EnableDraggingWatermark()
-        window.watermark.dragging = false
-        window.watermark.drag = Vector2.new(0, 0)
-
-    utility:Connection(uis.InputBegan, function(Input)
-        if Input.UserInputType == Enum.UserInputType.MouseButton1 and window.watermark.visible and utility:MouseOverDrawing({
-            window.watermark.outline.Position.X, 
-            window.watermark.outline.Position.Y, 
-            window.watermark.outline.Position.X + window.watermark.outline.Size.X, 
-            window.watermark.outline.Position.Y + window.watermark.outline.Size.Y
-        }) then
-            local mouseLocation = utility:MouseLocation()
-            window.watermark.dragging = true
-            window.watermark.drag = Vector2.new(mouseLocation.X - window.watermark.outline.Position.X, mouseLocation.Y - window.watermark.outline.Position.Y)
-        end
-    end)
-
-    utility:Connection(uis.InputEnded, function(Input)
-        if Input.UserInputType == Enum.UserInputType.MouseButton1 and window.watermark.dragging then
-            window.watermark.dragging = false
-            window.watermark.drag = Vector2.new(0, 0)
-        end
-    end)
-
-    utility:Connection(uis.InputChanged, function()
-        if window.watermark.dragging and window.watermark.visible then
-            local mouseLocation = utility:MouseLocation()
-            local newPosition = Vector2.new(
-                math.clamp(mouseLocation.X - window.watermark.drag.X, 5, utility:GetScreenSize().X - window.watermark.outline.Size.X - 5),
-                math.clamp(mouseLocation.Y - window.watermark.drag.Y, 5, utility:GetScreenSize().Y - window.watermark.outline.Size.Y - 5)
-            )
-            
-            window.watermark.outline.Position = newPosition
-            utility:UpdateOffset(window.watermark.inline, {Vector2.new(1, 1), window.watermark.outline})
-            utility:UpdateOffset(window.watermark.frame, {Vector2.new(1, 1), window.watermark.inline})
-            utility:UpdateOffset(window.watermark.accent, {Vector2.new(0, 0), window.watermark.frame})
-            utility:UpdateOffset(window.watermark.title, {Vector2.new(2 + 6, 4), window.watermark.outline})
-        end
-    end)
-end
-
-
             --
             function window.watermark:Visibility()
                 watermark_outline.Visible = window.watermark.visible
