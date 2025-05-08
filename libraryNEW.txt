@@ -2041,12 +2041,13 @@ library.changed[#library.changed + 1] = function()
             math.clamp(mouseLocation.X - window.watermark.drag.X, 5, utility:GetScreenSize().X - watermark_outline.Size.X - 5),
             math.clamp(mouseLocation.Y - window.watermark.drag.Y, 5, utility:GetScreenSize().Y - watermark_outline.Size.Y - 5)
         )
-        
+
         watermark_outline.Position = newPosition
-        utility:UpdateOffset(watermark_inline, {Vector2.new(1, 1), watermark_outline})
-        utility:UpdateOffset(watermark_frame, {Vector2.new(1, 1), watermark_inline})
-        utility:UpdateOffset(watermark_accent, {Vector2.new(0, 0), watermark_frame})
-        utility:UpdateOffset(watermark_title, {Vector2.new(2 + 6, 4), watermark_outline})
+        
+        watermark_inline.Position = Vector2.new(watermark_outline.Position.X + 1, watermark_outline.Position.Y + 1)
+        watermark_frame.Position = Vector2.new(watermark_inline.Position.X + 1, watermark_inline.Position.Y + 1)
+        watermark_accent.Position = Vector2.new(watermark_frame.Position.X, watermark_frame.Position.Y)
+        watermark_title.Position = Vector2.new(watermark_outline.Position.X + 8, watermark_outline.Position.Y + 4)
     end
 end
 
