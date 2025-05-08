@@ -2108,7 +2108,7 @@ do
                 Color = "accent"
             }
             --
-            local keybindslist_title = utility:Create("TextLabel", {Vector2.new(10, 4), keybindslist_outline}, {
+            local keybindslist_title = utility:Create("TextLabel", {Vector2.new(5, 4), keybindslist_outline}, {
                 Text = "Keybinds",
                 Size = theme.textsize,
                 Font = theme.font,
@@ -2117,7 +2117,7 @@ do
                 Center = false,
                 Hidden = false,
                 ZIndex = 55,
-                Position = utility:Position(0, 10, 0, 5, keybindslist_outline),  -- Позиция в левом углу
+                Position = utility:Position(0, 5, 0, 5, keybindslist_outline),
                 Visible = window.keybindslist.visible
             })
             --
