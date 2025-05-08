@@ -1926,8 +1926,7 @@ do
         end
         --
         function window:Watermark(info)
-            window.watermark = {visible = false, dragging = false, drag = Vector2.new(0, 0)}
-
+            window.watermark = {visible = false}
             --
             local info = info or {}
             local watermark_name = info.name or info.Name or info.title or info.Title or window.wminfo
@@ -2011,47 +2010,48 @@ do
                 watermark_accent.Size = utility:Size(1, 0, 0, 1, watermark_frame)
             end
 
-window.watermark.dragging = false
-window.watermark.drag = Vector2.new(0, 0)
-
-library.began[#library.began + 1] = function(Input)
-    if Input.UserInputType == Enum.UserInputType.MouseButton1 and window.watermark.visible and utility:MouseOverDrawing({
-        watermark_outline.Position.X, 
-        watermark_outline.Position.Y, 
-        watermark_outline.Position.X + watermark_outline.Size.X, 
-        watermark_outline.Position.Y + watermark_outline.Size.Y
-    }) then
-        local mouseLocation = utility:MouseLocation()
-        window.watermark.dragging = true
-        window.watermark.drag = Vector2.new(mouseLocation.X - watermark_outline.Position.X, mouseLocation.Y - watermark_outline.Position.Y)
-    end
-end
-
-library.ended[#library.ended + 1] = function(Input)
-    if Input.UserInputType == Enum.UserInputType.MouseButton1 and window.watermark.dragging then
+            function window:EnableDraggingWatermark()
         window.watermark.dragging = false
         window.watermark.drag = Vector2.new(0, 0)
-    end
-end
 
-library.changed[#library.changed + 1] = function()
-    if window.watermark.dragging and window.watermark.visible then
-        local mouseLocation = utility:MouseLocation()
-        local newPosition = Vector2.new(
-            math.clamp(mouseLocation.X - window.watermark.drag.X, 5, utility:GetScreenSize().X - watermark_outline.Size.X - 5),
-            math.clamp(mouseLocation.Y - window.watermark.drag.Y, 5, utility:GetScreenSize().Y - watermark_outline.Size.Y - 5)
-        )
-        
-        watermark_outline.Position = newPosition
-        
-        utility:UpdateOffset(watermark_inline, {Vector2.new(1, 1), watermark_outline})
-        utility:UpdateOffset(watermark_frame, {Vector2.new(1, 1), watermark_inline})
-        utility:UpdateOffset(watermark_accent, {Vector2.new(0, 0), watermark_frame})
-        utility:UpdateOffset(watermark_title, {Vector2.new(2 + 6, 4), watermark_outline})
-    end
-end
+    utility:Connection(uis.InputBegan, function(Input)
+        if Input.UserInputType == Enum.UserInputType.MouseButton1 and window.watermark.visible and utility:MouseOverDrawing({
+            window.watermark.outline.Position.X, 
+            window.watermark.outline.Position.Y, 
+            window.watermark.outline.Position.X + window.watermark.outline.Size.X, 
+            window.watermark.outline.Position.Y + window.watermark.outline.Size.Y
+        }) then
+            local mouseLocation = utility:MouseLocation()
+            window.watermark.dragging = true
+            window.watermark.drag = Vector2.new(mouseLocation.X - window.watermark.outline.Position.X, mouseLocation.Y - window.watermark.outline.Position.Y)
+        end
+    end)
 
+    utility:Connection(uis.InputEnded, function(Input)
+        if Input.UserInputType == Enum.UserInputType.MouseButton1 and window.watermark.dragging then
+            window.watermark.dragging = false
+            window.watermark.drag = Vector2.new(0, 0)
+        end
+    end)
+
+    utility:Connection(uis.InputChanged, function()
+        if window.watermark.dragging and window.watermark.visible then
+            local mouseLocation = utility:MouseLocation()
+            local newPosition = Vector2.new(
+                math.clamp(mouseLocation.X - window.watermark.drag.X, 5, utility:GetScreenSize().X - window.watermark.outline.Size.X - 5),
+                math.clamp(mouseLocation.Y - window.watermark.drag.Y, 5, utility:GetScreenSize().Y - window.watermark.outline.Size.Y - 5)
+            )
             
+            window.watermark.outline.Position = newPosition
+            utility:UpdateOffset(window.watermark.inline, {Vector2.new(1, 1), window.watermark.outline})
+            utility:UpdateOffset(window.watermark.frame, {Vector2.new(1, 1), window.watermark.inline})
+            utility:UpdateOffset(window.watermark.accent, {Vector2.new(0, 0), window.watermark.frame})
+            utility:UpdateOffset(window.watermark.title, {Vector2.new(2 + 6, 4), window.watermark.outline})
+        end
+    end)
+end
+
+
             --
             function window.watermark:Visibility()
                 watermark_outline.Visible = window.watermark.visible
@@ -2177,47 +2177,6 @@ end
                     index = index + 1
                 end
             end
-
-window.keybindslist.dragging = false
-window.keybindslist.drag = Vector2.new(0, 0)
-
-library.began[#library.began + 1] = function(Input)
-    if Input.UserInputType == Enum.UserInputType.MouseButton1 and window.keybindslist.visible and utility:MouseOverDrawing({
-        keybindslist_outline.Position.X, 
-        keybindslist_outline.Position.Y, 
-        keybindslist_outline.Position.X + keybindslist_outline.Size.X, 
-        keybindslist_outline.Position.Y + keybindslist_title.TextBounds.Y + 6
-    }) then
-        local mouseLocation = utility:MouseLocation()
-        window.keybindslist.dragging = true
-        window.keybindslist.drag = Vector2.new(mouseLocation.X - keybindslist_outline.Position.X, mouseLocation.Y - keybindslist_outline.Position.Y)
-    end
-end
-
-library.ended[#library.ended + 1] = function(Input)
-    if Input.UserInputType == Enum.UserInputType.MouseButton1 and window.keybindslist.dragging then
-        window.keybindslist.dragging = false
-        window.keybindslist.drag = Vector2.new(0, 0)
-    end
-end
-
-library.changed[#library.changed + 1] = function()
-    if window.keybindslist.dragging and window.keybindslist.visible then
-        local mouseLocation = utility:MouseLocation()
-        local newPosition = Vector2.new(
-            math.clamp(mouseLocation.X - window.keybindslist.drag.X, 5, utility:GetScreenSize().X - keybindslist_outline.Size.X - 5),
-            math.clamp(mouseLocation.Y - window.keybindslist.drag.Y, 5, utility:GetScreenSize().Y - keybindslist_outline.Size.Y - 5)
-        )
-        
-        keybindslist_outline.Position = newPosition
-        utility:UpdateOffset(keybindslist_inline, {Vector2.new(1, 1), keybindslist_outline})
-        utility:UpdateOffset(keybindslist_frame, {Vector2.new(1, 1), keybindslist_inline})
-        utility:UpdateOffset(keybindslist_accent, {Vector2.new(0, 0), keybindslist_frame})
-        utility:UpdateOffset(keybindslist_title, {Vector2.new(keybindslist_outline.Size.X/2, 4), keybindslist_outline})
-        
-        window.keybindslist:Resort()
-    end
-end
             --
             function window.keybindslist:Add(keybindname, keybindvalue)
                 if keybindname and keybindvalue and not window.keybindslist.keybinds[keybindname] then
