@@ -2118,7 +2118,7 @@ do
                 TextXAlignment = Enum.TextXAlignment.Left,
                 Hidden = false,
                 ZIndex = 55,
-                Position = utility:Position(0, 2, 0, 5, keybindslist_outline),
+                Position = utility:Position(0, 3, 0, 5, keybindslist_outline),
                 Visible = window.keybindslist.visible
             })
             
