@@ -2050,9 +2050,6 @@ library.changed[#library.changed + 1] = function()
         watermark_title.Position = Vector2.new(watermark_outline.Position.X + 8, watermark_outline.Position.Y + 4)
     end
 end
-
-
-
             --
             function window.watermark:Visibility()
                 watermark_outline.Visible = window.watermark.visible
@@ -2178,6 +2175,50 @@ end
                     index = index + 1
                 end
             end
+
+            window.keybindslist.dragging = false
+            window.keybindslist.drag = Vector2.new(0, 0)
+
+
+library.began[#library.began + 1] = function(Input)
+    if Input.UserInputType == Enum.UserInputType.MouseButton1 and window.keybindslist.visible and utility:MouseOverDrawing({
+        keybindslist_outline.Position.X, 
+        keybindslist_outline.Position.Y, 
+        keybindslist_outline.Position.X + keybindslist_outline.Size.X, 
+        keybindslist_outline.Position.Y + 20
+    }) then
+        local mouseLocation = utility:MouseLocation()
+        window.keybindslist.dragging = true
+        window.keybindslist.drag = Vector2.new(mouseLocation.X - keybindslist_outline.Position.X, mouseLocation.Y - keybindslist_outline.Position.Y)
+    end
+end
+
+library.ended[#library.ended + 1] = function(Input)
+    if Input.UserInputType == Enum.UserInputType.MouseButton1 and window.keybindslist.dragging then
+        window.keybindslist.dragging = false
+        window.keybindslist.drag = Vector2.new(0, 0)
+    end
+end
+
+library.changed[#library.changed + 1] = function()
+    if window.keybindslist.dragging and window.keybindslist.visible then
+        local mouseLocation = utility:MouseLocation()
+        local newPosition = Vector2.new(
+            math.clamp(mouseLocation.X - window.keybindslist.drag.X, 5, utility:GetScreenSize().X - keybindslist_outline.Size.X - 5),
+            math.clamp(mouseLocation.Y - window.keybindslist.drag.Y, 5, utility:GetScreenSize().Y - keybindslist_outline.Size.Y - 5)
+        )
+        
+        keybindslist_outline.Position = newPosition
+        keybindslist_inline.Position = Vector2.new(keybindslist_outline.Position.X + 1, keybindslist_outline.Position.Y + 1)
+        keybindslist_frame.Position = Vector2.new(keybindslist_inline.Position.X + 1, keybindslist_inline.Position.Y + 1)
+        keybindslist_accent.Position = Vector2.new(keybindslist_frame.Position.X, keybindslist_frame.Position.Y)
+        keybindslist_title.Position = Vector2.new(keybindslist_outline.Position.X + 2, keybindslist_outline.Position.Y + 4)
+        
+        window.keybindslist:Resort()
+    end
+end
+
+
             --
             function window.keybindslist:Add(keybindname, keybindvalue)
                 if keybindname and keybindvalue and not window.keybindslist.keybinds[keybindname] then
