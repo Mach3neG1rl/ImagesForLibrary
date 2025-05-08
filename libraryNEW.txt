@@ -55,14 +55,15 @@ local utility = {
 }
 local pages = {}
 local sections = {}
--- Theme Variables
---local themes = {}
+
+-- Themes
+
 local theme = {
-    ['accent'] = Color3.fromRGB(197,208,230);
-    ['lightcontrast'] = Color3.fromRGB(40, 40, 40);
-    ['darkcontrast'] = Color3.fromRGB(20, 20, 20);
-    ['outline'] = Color3.fromRGB(1,1,1);
-    ['inline'] = Color3.fromRGB(45, 45, 45);
+    ['accent'] = Color3.fromRGB(147,188,222);
+    ['lightcontrast'] = Color3.fromRGB(56,54,61);
+    ['darkcontrast'] = Color3.fromRGB(40,39,46);
+    ['outline'] = Color3.fromRGB(0,0,0);
+    ['inline'] = Color3.fromRGB(63,63,67);
     ['textcolor'] = Color3.fromRGB(255,255,255);
     textdark = Color3.fromRGB(175, 175, 175);
     ['textborder'] = Color3.fromRGB(0,0,0);
@@ -114,25 +115,15 @@ local themes = {
         ['textborder'] = Color3.fromRGB(0,0,0);
         ['cursoroutline'] = Color3.fromRGB(10,10,10);
     };
-    ['nanohub'] = {
-        accent = Color3.fromRGB(170, 0, 255),
-        lightcontrast = Color3.fromRGB(30, 30, 30),
-        darkcontrast = Color3.fromRGB(20, 20, 20),
-        outline = Color3.fromRGB(0, 0, 0),
-        inline = Color3.fromRGB(50, 50, 50),
-        textcolor = Color3.fromRGB(255, 255, 255),
-        textborder = Color3.fromRGB(0, 0, 0),
-        cursoroutline = Color3.fromRGB(10, 10, 10)     
-    };
     ["Aimware"] = {
-        accent = Color3.fromRGB(222, 60, 39),
-        lightcontrast = Color3.fromRGB(15, 16, 18),
-        darkcontrast = Color3.fromRGB(23, 23, 25),
-        outline = Color3.fromRGB(0, 0, 0),
-        inline = Color3.fromRGB(42, 42, 42),
-        textcolor = Color3.fromRGB(255, 255, 255),
-        textborder = Color3.fromRGB(0, 0, 0),
-        cursoroutline = Color3.fromRGB(10, 10, 10)
+        ['accent'] = Color3.fromRGB(222, 60, 39),
+        ['lightcontrast'] = Color3.fromRGB(15, 16, 18),
+        ['darkcontrast'] = Color3.fromRGB(23, 23, 25),
+        ['outline'] = Color3.fromRGB(0, 0, 0),
+        ['inline'] = Color3.fromRGB(42, 42, 42),
+        ['textcolor'] = Color3.fromRGB(255, 255, 255),
+        ['textborder'] = Color3.fromRGB(0, 0, 0),
+        ['cursoroutline'] = Color3.fromRGB(10, 10, 10)
     };
     ["Spotify"] = {
         ['accent'] = Color3.fromRGB(30,193,81);
@@ -214,25 +205,15 @@ local themes = {
         ['textborder'] = Color3.fromRGB(0,0,0);
         ['cursoroutline'] = Color3.fromRGB(10,10,10);
     };
-    ["Bitch Bot"] = {
-        ['accent'] = Color3.fromRGB(162, 46, 230);
-        ['lightcontrast'] = Color3.fromRGB(48,48,48);
-        ['darkcontrast'] = Color3.fromRGB(27,27,27);
-        ['outline'] = Color3.fromRGB(1,1,1);
-        ['inline'] = Color3.fromRGB(26,26,26);
-        ['textcolor'] = Color3.fromRGB(255,255,255);
-        ['textborder'] = Color3.fromRGB(0,0,0);
-        ['cursoroutline'] = Color3.fromRGB(10,10,10);
-    };
     ["Primordial"] = {
-        accent = Color3.fromRGB(221, 192, 201),
-        lightcontrast = Color3.fromRGB(23, 25, 24),
-        darkcontrast = Color3.fromRGB(23, 23, 25),
-        outline = Color3.fromRGB(0, 0, 0),
-        inline = Color3.fromRGB(12, 14, 18),
-        textcolor = Color3.fromRGB(255, 255, 255),
-        textborder = Color3.fromRGB(0, 0, 0),
-        cursoroutline = Color3.fromRGB(10, 10, 10)
+        ['accent'] = Color3.fromRGB(221, 192, 201),
+        ['lightcontrast'] = Color3.fromRGB(23, 25, 24),
+        ['darkcontrast'] = Color3.fromRGB(23, 23, 25),
+        ['outline'] = Color3.fromRGB(0, 0, 0),
+        ['inline'] = Color3.fromRGB(12, 14, 18),
+        ['textcolor'] = Color3.fromRGB(255, 255, 255),
+        ['textborder'] = Color3.fromRGB(0, 0, 0),
+        ['cursoroutline'] = Color3.fromRGB(10, 10, 10)
     };
     ["Lucky Charms"] = {
         ['accent'] = Color3.fromRGB(27,96,38);
@@ -243,46 +224,6 @@ local themes = {
         ['textcolor'] = Color3.fromRGB(255,255,255);
         ['textborder'] = Color3.fromRGB(0,0,0);
         ['cursoroutline'] = Color3.fromRGB(10,10,10);
-    };
-    ["Seere"] = {
-        ['accent'] = Color3.fromRGB(35,131,167);
-        ['lightcontrast'] = Color3.fromRGB(20,20,20);
-        ['darkcontrast'] = Color3.fromRGB(17,17,17);
-        ['outline'] = Color3.fromRGB(1,1,1);
-        ['inline'] = Color3.fromRGB(28,28,28);
-        ['textcolor'] = Color3.fromRGB(255,255,255);
-        ['textborder'] = Color3.fromRGB(0,0,0);
-        ['cursoroutline'] = Color3.fromRGB(10,10,10);
-    };
-    ["Azure"] = {
-        ['accent'] = Color3.fromRGB(222,117,222);
-        ['lightcontrast'] = Color3.fromRGB(80,80,80);
-        ['darkcontrast'] = Color3.fromRGB(65,65,65);
-        ['outline'] = Color3.fromRGB(60,60,60);
-        ['inline'] = Color3.fromRGB(72,72,72);
-        ['textcolor'] = Color3.fromRGB(255,255,255);
-        ['textborder'] = Color3.fromRGB(0,0,0);
-        ['cursoroutline'] = Color3.fromRGB(10,10,10);
-    };
-    ['Rifk7'] = {
-        accent = Color3.fromRGB(128, 158, 134),
-        lightcontrast = Color3.fromRGB(34, 34, 34),
-        darkcontrast = Color3.fromRGB(33, 33, 33),
-        outline = Color3.fromRGB(20, 20, 20),
-        inline = Color3.fromRGB(105, 105, 105),
-        textcolor = Color3.fromRGB(255, 255, 255),
-        textborder = Color3.fromRGB(0, 0, 0),
-        cursoroutline = Color3.fromRGB(10, 10, 10)    
-    };
-	['SanyaHaxx'] = {
-		accent = Color3.fromRGB(125, 134, 255),
-        lightcontrast = Color3.fromRGB(26, 26, 33),
-        darkcontrast = Color3.fromRGB(16, 16, 20),
-        outline = Color3.fromRGB(0, 0, 0),
-        inline = Color3.fromRGB(38, 38, 41),
-        textcolor = Color3.fromRGB(255, 255, 255),
-        textborder = Color3.fromRGB(0, 0, 0),
-        cursoroutline = Color3.fromRGB(10, 10, 10)
 	}
 }
 
