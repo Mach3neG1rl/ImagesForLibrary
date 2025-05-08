@@ -2108,7 +2108,7 @@ do
                 Color = "accent"
             }
             --
-            local keybindslist_title = utility:Create("TextLabel", {Vector2.new(2, 4), keybindslist_outline}, {
+            local keybindslist_title = utility:Create("TextLabel", {Vector2.new(2, 10), keybindslist_outline}, {
                 Text = "Keybinds",
                 Size = theme.textsize,
                 Font = theme.font,
@@ -2118,10 +2118,9 @@ do
                 TextXAlignment = Enum.TextXAlignment.Left,
                 Hidden = false,
                 ZIndex = 55,
-                Position = utility:Position(0, 0, 0, 0, keybindslist_outline),
+                Position = utility:Position(0, 0, 0, 10, keybindslist_outline),
                 Visible = window.keybindslist.visible
             })
-            
             --
             library.colors[keybindslist_title] = {
                 OutlineColor = "textborder",
