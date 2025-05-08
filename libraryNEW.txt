@@ -2176,7 +2176,7 @@ do
                 Center = false,
                 Hidden = false,
                 ZIndex = 55,
-                Position = utility:Position(0.5, 0, 0, 5, keybindslist_outline),
+                Position = utility:Position(0, 0, 0, 0, keybindslist_outline),
                 Visible = window.keybindslist.visible
             })
             --
