@@ -1219,6 +1219,8 @@ do
                 State = false,
                 Visible = true,
                 draggable = false,
+                dragging = false,
+                drag = Vector2.new(0, 0),
                 Drawings = {},
                 Components = {
                     Box = {
