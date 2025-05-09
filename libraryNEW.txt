@@ -1218,6 +1218,7 @@ do
                 Fading = false,
                 State = false,
                 Visible = true,
+                draggable = false,
                 Drawings = {},
                 Components = {
                     Box = {
@@ -1465,17 +1466,20 @@ do
             end
             --
             library.began[#library.began + 1] = function(Input)
-                if Input.UserInputType == Enum.UserInputType.MouseButton1 and esppreview_visiblebutton.Visible and window.isVisible and utility:MouseOverDrawing({esppreview_visiblebutton.Position.X, esppreview_visiblebutton.Position.Y, esppreview_visiblebutton.Position.X + esppreview_visiblebutton.TextBounds.X, esppreview_visiblebutton.Position.Y + esppreview_visiblebutton.TextBounds.Y}) and not window:IsOverContent() then
-                    window.VisualPreview.Visible = not window.VisualPreview.Visible
-                    esppreview_visiblebutton.Text = window.VisualPreview.Visible and "O" or "0"
-                end
-            end
+    if Input.UserInputType == Enum.UserInputType.MouseButton1 and esppreview_visiblebutton.Visible and window.isVisible and utility:MouseOverDrawing({esppreview_visiblebutton.Position.X, esppreview_visiblebutton.Position.Y, esppreview_visiblebutton.Position.X + esppreview_visiblebutton.TextBounds.X, esppreview_visiblebutton.Position.Y + esppreview_visiblebutton.TextBounds.Y}) and not window:IsOverContent() then
+        window.VisualPreview.Visible = not window.VisualPreview.Visible
+        esppreview_visiblebutton.Text = window.VisualPreview.Visible and "O" or "0"
+        
+        window.VisualPreview.draggable = esppreview_visiblebutton.Text == "0"
+    end
+end
+
             --
 window.VisualPreview.dragging = false
 window.VisualPreview.drag = Vector2.new(0, 0)
 
 library.began[#library.began + 1] = function(Input)
-    if Input.UserInputType == Enum.UserInputType.MouseButton1 and window.VisualPreview.Visible and esppreview_visiblebutton.Text == "0" and utility:MouseOverDrawing({
+    if Input.UserInputType == Enum.UserInputType.MouseButton1 and window.VisualPreview.Visible and window.VisualPreview.draggable and utility:MouseOverDrawing({
         esppreview_frame.Position.X, 
         esppreview_frame.Position.Y, 
         esppreview_frame.Position.X + esppreview_frame.Size.X, 
