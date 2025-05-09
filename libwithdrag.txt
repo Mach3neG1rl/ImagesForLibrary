@@ -1480,17 +1480,30 @@ window.VisualPreview.dragging = false
 window.VisualPreview.drag = Vector2.new(0, 0)
 
 library.began[#library.began + 1] = function(Input)
-    if Input.UserInputType == Enum.UserInputType.MouseButton1 and window.VisualPreview.Visible and window.VisualPreview.draggable and utility:MouseOverDrawing({
-        esppreview_frame.Position.X, 
-        esppreview_frame.Position.Y, 
-        esppreview_frame.Position.X + esppreview_frame.Size.X, 
-        esppreview_frame.Position.Y + 20
-    }) then
-        local mouseLocation = utility:MouseLocation()
-        window.VisualPreview.dragging = true
-        window.VisualPreview.drag = Vector2.new(mouseLocation.X - esppreview_frame.Position.X, mouseLocation.Y - esppreview_frame.Position.Y)
+    if Input.UserInputType == Enum.UserInputType.MouseButton1 and window.VisualPreview.Visible and window.VisualPreview.draggable then
+        print("Button: " .. esppreview_visiblebutton.Text)
+        print("Draggable: " .. tostring(window.VisualPreview.draggable))
+        print("MouseOver: " .. tostring(utility:MouseOverDrawing({
+            esppreview_frame.Position.X, 
+            esppreview_frame.Position.Y, 
+            esppreview_frame.Position.X + esppreview_frame.Size.X, 
+            esppreview_frame.Position.Y + 20
+        })))
+        
+        if utility:MouseOverDrawing({
+            esppreview_frame.Position.X, 
+            esppreview_frame.Position.Y, 
+            esppreview_frame.Position.X + esppreview_frame.Size.X, 
+            esppreview_frame.Position.Y + 20
+        }) then
+            local mouseLocation = utility:MouseLocation()
+            window.VisualPreview.dragging = true
+            window.VisualPreview.drag = Vector2.new(mouseLocation.X - esppreview_frame.Position.X, mouseLocation.Y - esppreview_frame.Position.Y)
+            print("Start dragging ESP Preview")
+        end
     end
 end
+
 
 library.ended[#library.ended + 1] = function(Input)
     if Input.UserInputType == Enum.UserInputType.MouseButton1 and window.VisualPreview.dragging then
