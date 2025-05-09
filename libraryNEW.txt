@@ -2496,6 +2496,178 @@ library.changed[#library.changed + 1] = function()
         window.statuslist:Resort()
     end
 end
+
+function window:DamageLog(info)
+    window.damagelog = {visible = false, logs = {}, fadeTime = 3}
+    
+    local info = info or {}
+    local fadeTime = info.fadeTime or info.FadeTime or 3
+    
+    local damagelog_outline = utility:Create("Frame", {Vector2.new(0, 0)}, {
+        Size = utility:Size(0, 200, 0, 22),
+        Position = utility:Position(0.5, -100, 1, -50), -- Позиционирование внизу по центру
+        Hidden = false,
+        ZIndex = 60,
+        Color = theme.outline,
+        Visible = window.damagelog.visible
+    })
+    window.damagelog.outline = damagelog_outline
+    
+    library.colors[damagelog_outline] = {
+        Color = "outline"
+    }
+    
+
+    local damagelog_inline = utility:Create("Frame", {Vector2.new(1,1), damagelog_outline}, {
+        Size = utility:Size(1, -2, 1, -2, damagelog_outline),
+        Position = utility:Position(0, 1, 0, 1, damagelog_outline),
+        Hidden = false,
+        ZIndex = 60,
+        Color = theme.inline,
+        Visible = window.damagelog.visible
+    })
+    
+    library.colors[damagelog_inline] = {
+        Color = "inline"
+    }
+    
+
+    local damagelog_frame = utility:Create("Frame", {Vector2.new(1,1), damagelog_inline}, {
+        Size = utility:Size(1, -2, 1, -2, damagelog_inline),
+        Position = utility:Position(0, 1, 0, 1, damagelog_inline),
+        Hidden = false,
+        ZIndex = 60,
+        Color = theme.lightcontrast,
+        Visible = window.damagelog.visible
+    })
+    
+    library.colors[damagelog_frame] = {
+        Color = "lightcontrast"
+    }
+
+    local damagelog_accent = utility:Create("Frame", {Vector2.new(0,0), damagelog_frame}, {
+        Size = utility:Size(1, 0, 0, 1, damagelog_frame),
+        Position = utility:Position(0, 0, 0, 0, damagelog_frame),
+        Hidden = false,
+        ZIndex = 60,
+        Color = theme.accent,
+        Visible = window.damagelog.visible
+    })
+    library.accents[#library.accents + 1] = damagelog_accent
+    
+    library.colors[damagelog_accent] = {
+        Color = "accent"
+    }
+
+    local damagelog_title = utility:Create("TextLabel", {Vector2.new(damagelog_outline.Size.X/2, 4), damagelog_outline}, {
+        Text = "Damage Log",
+        Size = theme.textsize,
+        Font = theme.font,
+        Color = theme.textcolor,
+        OutlineColor = theme.textborder,
+        Center = true,
+        Hidden = false,
+        ZIndex = 60,
+        Position = utility:Position(0.5, 0, 0, 4, damagelog_outline),
+        Visible = window.damagelog.visible
+    })
+    
+    library.colors[damagelog_title] = {
+        OutlineColor = "textborder",
+        Color = "textcolor"
+    }
+    
+    window.damagelog.drawings = {
+        damagelog_outline,
+        damagelog_inline,
+        damagelog_frame,
+        damagelog_accent,
+        damagelog_title
+    }
+    
+    function window.damagelog:Add(text, duration)
+        local duration = duration or window.damagelog.fadeTime
+        window.damagelog.visible = true
+        
+        for _, element in pairs(window.damagelog.drawings) do
+            element.Visible = true
+        end
+
+        local log_text = utility:Create("TextLabel", {Vector2.new(4, 22), damagelog_outline}, {
+            Text = text,
+            Size = theme.textsize,
+            Font = theme.font,
+            Color = theme.textcolor,
+            OutlineColor = theme.textborder,
+            Center = false,
+            Hidden = false,
+            ZIndex = 60,
+            Position = utility:Position(0, 4, 0, 22, damagelog_outline),
+            Visible = true
+        })
+        
+        library.colors[log_text] = {
+            OutlineColor = "textborder",
+            Color = "textcolor"
+        }
+        
+        table.insert(window.damagelog.drawings, log_text)
+        
+        damagelog_outline.Size = utility:Size(0, 200, 0, 22 + 20)
+        damagelog_inline.Size = utility:Size(1, -2, 1, -2, damagelog_outline)
+        damagelog_frame.Size = utility:Size(1, -2, 1, -2, damagelog_inline)
+        damagelog_accent.Size = utility:Size(1, 0, 0, 1, damagelog_frame)
+        
+
+        table.insert(window.damagelog.logs, {text = log_text, time = tick(), duration = duration})
+        
+        spawn(function()
+            wait(duration)
+            
+            window.damagelog:Fade()
+            
+            wait(0.3)
+            for i, v in pairs(window.damagelog.logs) do
+                if v.text == log_text then
+                    table.remove(window.damagelog.logs, i)
+                    table.remove(window.damagelog.drawings, #window.damagelog.drawings)
+                    utility:Remove(log_text)
+                    break
+                end
+            end
+        end)
+    end
+    
+    function window.damagelog:Fade()
+        window.damagelog.fading = true
+        
+        spawn(function()
+            for _, element in pairs(window.damagelog.drawings) do
+                utility:Lerp(element, {Transparency = 0}, 0.25)
+            end
+            
+            wait(0.3)
+            window.damagelog.visible = false
+            for _, element in pairs(window.damagelog.drawings) do
+                element.Visible = false
+            end
+        end)
+        
+        window.damagelog.fading = false
+    end
+    
+    function window.damagelog:SetFadeTime(time)
+        window.damagelog.fadeTime = time
+    end
+    
+    utility:Connection(ws.CurrentCamera:GetPropertyChangedSignal("ViewportSize"), function()
+        local screenSize = utility:GetScreenSize()
+        damagelog_outline.Position = utility:Position(0.5, -100, 1, -50)
+    end)
+    
+    return window.damagelog
+end
+
 --
             function window.statuslist:Add(statusname)
                 if statusname and not window.statuslist.statuses[statusname] then
