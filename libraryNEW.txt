@@ -2453,6 +2453,47 @@ end
                 end
             end
             --
+window.statuslist.dragging = false
+window.statuslist.drag = Vector2.new(0, 0)
+
+library.began[#library.began + 1] = function(Input)
+    if Input.UserInputType == Enum.UserInputType.MouseButton1 and window.statuslist.visible and utility:MouseOverDrawing({
+        statuslist_outline.Position.X, 
+        statuslist_outline.Position.Y, 
+        statuslist_outline.Position.X + statuslist_outline.Size.X, 
+        statuslist_outline.Position.Y + 20
+    }) then
+        local mouseLocation = utility:MouseLocation()
+        window.statuslist.dragging = true
+        window.statuslist.drag = Vector2.new(mouseLocation.X - statuslist_outline.Position.X, mouseLocation.Y - statuslist_outline.Position.Y)
+    end
+end
+
+library.ended[#library.ended + 1] = function(Input)
+    if Input.UserInputType == Enum.UserInputType.MouseButton1 and window.statuslist.dragging then
+        window.statuslist.dragging = false
+        window.statuslist.drag = Vector2.new(0, 0)
+    end
+end
+
+library.changed[#library.changed + 1] = function()
+    if window.statuslist.dragging and window.statuslist.visible then
+        local mouseLocation = utility:MouseLocation()
+        local newPosition = Vector2.new(
+            math.clamp(mouseLocation.X - window.statuslist.drag.X, 5, utility:GetScreenSize().X - statuslist_outline.Size.X - 5),
+            math.clamp(mouseLocation.Y - window.statuslist.drag.Y, 5, utility:GetScreenSize().Y - statuslist_outline.Size.Y - 5)
+        )
+        
+        statuslist_outline.Position = newPosition
+        statuslist_inline.Position = Vector2.new(statuslist_outline.Position.X + 1, statuslist_outline.Position.Y + 1)
+        statuslist_frame.Position = Vector2.new(statuslist_inline.Position.X + 1, statuslist_inline.Position.Y + 1)
+        statuslist_accent.Position = Vector2.new(statuslist_frame.Position.X, statuslist_frame.Position.Y)
+        statuslist_title.Position = utility:Position(0.5, 0, 0, 5, statuslist_outline)
+        
+        window.statuslist:Resort()
+    end
+end
+--
             function window.statuslist:Add(statusname)
                 if statusname and not window.statuslist.statuses[statusname] then
                     local statusTable = {}
