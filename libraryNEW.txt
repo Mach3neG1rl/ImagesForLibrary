@@ -1218,7 +1218,6 @@ do
                 Fading = false,
                 State = false,
                 Visible = true,
-                draggable = false,
                 Drawings = {},
                 Components = {
                     Box = {
@@ -1466,71 +1465,12 @@ do
             end
             --
             library.began[#library.began + 1] = function(Input)
-    if Input.UserInputType == Enum.UserInputType.MouseButton1 and esppreview_visiblebutton.Visible and window.isVisible and utility:MouseOverDrawing({esppreview_visiblebutton.Position.X, esppreview_visiblebutton.Position.Y, esppreview_visiblebutton.Position.X + esppreview_visiblebutton.TextBounds.X, esppreview_visiblebutton.Position.Y + esppreview_visiblebutton.TextBounds.Y}) and not window:IsOverContent() then
-        window.VisualPreview.Visible = not window.VisualPreview.Visible
-        esppreview_visiblebutton.Text = window.VisualPreview.Visible and "O" or "0"
-        
-        window.VisualPreview.draggable = esppreview_visiblebutton.Text == "0"
-    end
-end
-
-            --
-window.VisualPreview.dragging = false
-window.VisualPreview.drag = Vector2.new(0, 0)
-
-library.began[#library.began + 1] = function(Input)
-    if Input.UserInputType == Enum.UserInputType.MouseButton1 and window.VisualPreview.Visible and window.VisualPreview.draggable and utility:MouseOverDrawing({
-        esppreview_frame.Position.X, 
-        esppreview_frame.Position.Y, 
-        esppreview_frame.Position.X + esppreview_frame.Size.X, 
-        esppreview_frame.Position.Y + 20
-    }) then
-        local mouseLocation = utility:MouseLocation()
-        window.VisualPreview.dragging = true
-        window.VisualPreview.drag = Vector2.new(mouseLocation.X - esppreview_frame.Position.X, mouseLocation.Y - esppreview_frame.Position.Y)
-    end
-end
-
-library.ended[#library.ended + 1] = function(Input)
-    if Input.UserInputType == Enum.UserInputType.MouseButton1 and window.VisualPreview.dragging then
-        window.VisualPreview.dragging = false
-        window.VisualPreview.drag = Vector2.new(0, 0)
-    end
-end
-
-library.changed[#library.changed + 1] = function()
-    if window.VisualPreview.dragging and window.VisualPreview.Visible then
-        local mouseLocation = utility:MouseLocation()
-        local newPosition = Vector2.new(
-            math.clamp(mouseLocation.X - window.VisualPreview.drag.X, 5, utility:GetScreenSize().X - esppreview_frame.Size.X - 5),
-            math.clamp(mouseLocation.Y - window.VisualPreview.drag.Y, 5, utility:GetScreenSize().Y - esppreview_frame.Size.Y - 5)
-        )
-
-        esppreview_frame.Position = newPosition
-        esppreview_inline.Position = Vector2.new(esppreview_frame.Position.X + 1, esppreview_frame.Position.Y + 1)
-        esppreview_inner.Position = Vector2.new(esppreview_inline.Position.X + 1, esppreview_inline.Position.Y + 1)
-        esppreview_title.Position = Vector2.new(esppreview_inner.Position.X + 4, esppreview_inner.Position.Y + 2)
-        esppreview_visiblebutton.Position = Vector2.new(esppreview_inner.Position.X + esppreview_inner.Size.X - (5 + 7), esppreview_inner.Position.Y + 2)
-        esppreview_inner_inline.Position = Vector2.new(esppreview_inner.Position.X + 4, esppreview_inner.Position.Y + 18)
-        esppreview_inner_outline.Position = Vector2.new(esppreview_inner_inline.Position.X + 1, esppreview_inner_inline.Position.Y + 1)
-        esppreview_inner_frame.Position = Vector2.new(esppreview_inner_outline.Position.X + 1, esppreview_inner_outline.Position.Y + 1)
-        esppreview_frame_previewbox.Position = Vector2.new(esppreview_inner_frame.Position.X + 10, esppreview_inner_frame.Position.Y + 10)
-        
-        -- Обновляем все дочерние элементы ESP Preview
-        for _, component in pairs(window.VisualPreview.Components) do
-            for _, element in pairs(component) do
-                if typeof(element) == "table" then
-                    for _, subelement in pairs(element) do
-                        utility:UpdateOffset(subelement, {subelement.Position, subelement.Parent})
-                    end
-                else
-                    utility:UpdateOffset(element, {element.Position, element.Parent})
+                if Input.UserInputType == Enum.UserInputType.MouseButton1 and esppreview_visiblebutton.Visible and window.isVisible and utility:MouseOverDrawing({esppreview_visiblebutton.Position.X, esppreview_visiblebutton.Position.Y, esppreview_visiblebutton.Position.X + esppreview_visiblebutton.TextBounds.X, esppreview_visiblebutton.Position.Y + esppreview_visiblebutton.TextBounds.Y}) and not window:IsOverContent() then
+                    window.VisualPreview.Visible = not window.VisualPreview.Visible
+                    esppreview_visiblebutton.Text = window.VisualPreview.Visible and "O" or "0"
                 end
             end
-        end
-    end
-end
-
+            --
             do -- Preview Stuff
                 local preview_boxoutline = utility:Create("Frame", {Vector2.new(esppreview_frame_previewbox.Size.X - BoxSize.X - 1, 20), esppreview_frame_previewbox}, {
                     Size = BoxSize,
