@@ -1360,19 +1360,22 @@ do
             local healthvalue
             local boxoutline
             --
-            function window.VisualPreview:UpdateHealthBar()
-                window.VisualPreview.HealthBarFade = window.VisualPreview.HealthBarFade + 0.015
-                local Smoothened = (math.acos(math.cos(window.VisualPreview.HealthBarFade * math.pi)) / math.pi)
-                local Size = (healthbaroutline.Size.Y - 2) * Smoothened
-                local Color = ColorLerp(Smoothened, window.VisualPreview.Color1, window.VisualPreview.Color2)
-                --
-                healthvalue.Text = "<- " .. math.round(Smoothened * 100)
-                healthvalue.Color = Color
-                healthbar.Color = Color
-                healthbar.Size = utility:Size(1, -2, 0, Size, healthbaroutline)
-                healthbar.Position = utility:Position(0, 1, 1, -Size - 1, healthbaroutline)
-                utility:UpdateOffset(healthbar, {Vector2.new(1, healthbaroutline.Size.Y - Size - 1), healthbaroutline})
-            end
+function window.VisualPreview:UpdateHealthBar()
+    window.VisualPreview.HealthBarFade = window.VisualPreview.HealthBarFade + 0.015
+    
+    local Smoothened = math.abs(math.sin(window.VisualPreview.HealthBarFade * math.pi))
+    
+    local Size = (healthbaroutline.Size.Y - 2) * Smoothened
+    local Color = ColorLerp(Smoothened, window.VisualPreview.Color1, window.VisualPreview.Color2)
+    
+    healthvalue.Text = "<- " .. math.round(Smoothened * 100)
+    healthvalue.Color = Color
+    healthbar.Color = Color
+    healthbar.Size = utility:Size(1, -2, 0, Size, healthbaroutline)
+    healthbar.Position = utility:Position(0, 1, 1, -Size - 1, healthbaroutline)
+    utility:UpdateOffset(healthbar, {Vector2.new(1, healthbaroutline.Size.Y - Size - 1), healthbaroutline})
+end
+
             --
             function window.VisualPreview:UpdateHealthValue(Size)
                 local New = Vector2.new(healthbar.Position.X + (5 - Size), math.clamp(healthbar.Position.Y + 5, 0, (healthbar.Position.Y) + (healthbar.Size.Y) - 18))
