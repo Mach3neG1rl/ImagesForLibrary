@@ -3927,7 +3927,7 @@ function playerList:Refresh(Relation)
 
             local userId = Selection[1].UserId
 
-            local thumbUrl = "rbxthumb://type=AvatarHeadShot&id=" .. userId .. "&w=150&h=150"
+            local thumbUrl = "rbxthumb://type=AvatarHeadShot&id=" .. userId .. "&w=100&h=100"
             local success, content = pcall(function()
                 return game:HttpGet(thumbUrl)
             end)
@@ -3938,7 +3938,7 @@ function playerList:Refresh(Relation)
             else
 
                 pcall(function()
-                    local apiUrl = "https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=" .. userId .. "&size=150x150&format=Png"
+                    local apiUrl = "https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=" .. userId .. "&size=100x100&format=Png"
                     local response = game:GetService("HttpService"):JSONDecode(game:HttpGet(apiUrl))
                     
                     if response and response.data and response.data[1] and response.data[1].imageUrl then
