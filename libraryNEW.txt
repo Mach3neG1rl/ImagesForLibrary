@@ -953,26 +953,6 @@ do
             --
             window:Fade()
         end
-
-library.changed[#library.changed + 1] = function()
-    if window.isVisible then
-        for instance, data in pairs(library.hovers) do
-            if instance.Visible then
-                if utility:MouseOverDrawing({
-                    instance.Position.X,
-                    instance.Position.Y,
-                    instance.Position.X + instance.Size.X,
-                    instance.Position.Y + instance.Size.Y
-                }) and not window:IsOverContent() then
-                    data.hover_outline.Transparency = 0.4
-                else
-                    data.hover_outline.Transparency = 0
-                end
-            end
-        end
-    end
-end
-
         --
         library.began[#library.began + 1] = function(Input)
             if Input.UserInputType == Enum.UserInputType.MouseButton1 and window.isVisible and window.isVisible and utility:MouseOverDrawing({main_frame.Position.X,main_frame.Position.Y,main_frame.Position.X + main_frame.Size.X,main_frame.Position.Y + 20}) then
@@ -1752,28 +1732,19 @@ end
             title.Text = Name
         end
         --
-function library:UpdateColor(ColorType, ColorValue)
-    local ColorType = ColorType:lower()
-    
-    theme[ColorType] = ColorValue
-    
-    for Index, Value in pairs(library.colors) do
-        for Index2, Value2 in pairs(Value) do
-            if Value2 == ColorType then
-                Index[Index2] = theme[Value2]
+        function library:UpdateColor(ColorType, ColorValue) -- pasted from Octernal
+            local ColorType = ColorType:lower()
+            --
+            theme[ColorType] = ColorValue
+            --
+            for Index, Value in pairs(library.colors) do
+                for Index2, Value2 in pairs(Value) do
+                    if Value2 == ColorType then
+                        Index[Index2] = theme[Value2]
+                    end
+                end
             end
         end
-    end
-    
-    if ColorType == "accent" and library.hovers then
-        for _, data in pairs(library.hovers) do
-            if data.hover_outline then
-                data.hover_outline.Color = theme.accent
-            end
-        end
-    end
-end
-
         --
         function library:SetTheme(theme_name)
             local sel_theme = themes[theme_name]
@@ -3937,9 +3908,6 @@ function playerList:Refresh(Relation)
     end
     --
     playerList_title.Text = ("Player List - %s Players on the server"):format(#game:GetService("Players"):GetPlayers())
-
-
-
     --
     local Selection = playerList:GetSelection()
     --
@@ -4145,26 +4113,6 @@ end
         library.colors[toggle_outline] = {
             Color = "outline"
         }
-       
-        local toggle_hover_outline = utility:Create("Frame", {Vector2.new(-1, -1), toggle_outline}, {
-            Size = utility:Size(1, 2, 1, 2, toggle_outline),
-            Position = utility:Position(0, -1, 0, -1, toggle_outline),
-            Color = theme.accent,
-            Transparency = 0, 
-            ZIndex = toggle_outline.ZIndex - 1,
-            Visible = page.open
-        },  section.visibleContent)
-
-library.colors[toggle_hover_outline] = {
-    Color = "accent"
-}
-
-if not library.hovers then library.hovers = {} end
-library.hovers[toggle_outline] = {
-    hover_outline = toggle_hover_outline,
-    instance = toggle_outline
-}
-
         --
         local toggle_inline = utility:Create("Frame", {Vector2.new(1,1), toggle_outline}, {
             Size = utility:Size(1, -2, 1, -2, toggle_outline),
