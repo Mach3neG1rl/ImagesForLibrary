@@ -3958,7 +3958,7 @@ function playerList:Refresh(Relation)
     else
         options_title.Text = "No player selected."
         options_avatar.Data = ""
-        options_loadingtext.Text = "..?"
+        options_loadingtext.Text = ""
         lastselection = nil
     end
 end
