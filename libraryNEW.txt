@@ -1732,16 +1732,22 @@ end
             title.Text = Name
         end
         --
-        function library:UpdateColor(ColorType, ColorValue) -- pasted from Octernal
+        function library:UpdateColor(ColorType, ColorValue)
             local ColorType = ColorType:lower()
-            --
+    
             theme[ColorType] = ColorValue
-            --
+    
             for Index, Value in pairs(library.colors) do
                 for Index2, Value2 in pairs(Value) do
                     if Value2 == ColorType then
                         Index[Index2] = theme[Value2]
                     end
+                end
+            end
+    
+            if ColorType == "accent" then
+                for _, data in pairs(library.hovers) do
+                    data.hover_outline.Color = theme.accent
                 end
             end
         end
@@ -2984,88 +2990,7 @@ end
         return setmetatable(page, pages)
     end
     --
-    function pages:Section(info)
-        local window = self.window
-        local info = info or {}
-        local name = info.name or info.Name or info.title or info.Title or "New Section"
-        local size = info.size or info.Size
-        local fill = info.fill or info.Fill
-        local side = window.loader and "left" or (info.side or info.Side or "left")
-        side = side:lower()
-        local page = self
-        local section = {window = window, page = page, visibleContent = {}, currentAxis = 20, side = side}
-        --
-        local section_inline = utility:Create("Frame", {Vector2.new(side == "right" and (window.tab_frame.Size.X/2)+2 or 5,5 + page["sectionOffset"][side]), window.tab_frame}, {
-            Size = utility:Size(window.loader and 1 or 0.5, window.loader and -10 or -7, 0, size or 22, window.tab_frame),
-            Position = utility:Position(side == "right" and 0.5 or 0, side == "right" and 2 or 5, 0, 5 + page.sectionOffset[side], window.tab_frame),
-            Color = theme.inline,
-            Visible = page.open
-        }, section.visibleContent);section["section_inline"] = section_inline
-        --
-        library.colors[section_inline] = {
-            Color = "inline"
-        }
-        --
-        local section_outline = utility:Create("Frame", {Vector2.new(1,1), section_inline}, {
-            Size = utility:Size(1, -2, 1, -2, section_inline),
-            Position = utility:Position(0, 1, 0, 1, section_inline),
-            Color = theme.outline,
-            Visible = page.open
-        }, section.visibleContent);section["section_outline"] = section_outline
-        --
-        library.colors[section_outline] = {
-            Color = "outline"
-        }
-        --
-        local section_frame = utility:Create("Frame", {Vector2.new(1,1), section_outline}, {
-            Size = utility:Size(1, -2, 1, -2, section_outline),
-            Position = utility:Position(0, 1, 0, 1, section_outline),
-            Color = theme.darkcontrast,
-            Visible = page.open
-        }, section.visibleContent);section["section_frame"] = section_frame
-        --
-        library.colors[section_frame] = {
-            Color = "darkcontrast"
-        }
-        --
-        local section_accent = utility:Create("Frame", {Vector2.new(0,0), section_frame}, {
-            Size = utility:Size(1, 0, 0, 2, section_frame),
-            Position = utility:Position(0, 0, 0, 0, section_frame),
-            Color = theme.accent,
-            Visible = page.open
-        }, section.visibleContent);section["section_accent"] = section_accent
-        library.accents[#library.accents + 1] = section_accent
-        --
-        library.colors[section_accent] = {
-            Color = "accent"
-        }
-        --
-        local section_title = utility:Create("TextLabel", {Vector2.new(3,3), section_frame}, {
-            Text = name,
-            Size = theme.textsize,
-            Font = theme.font,
-            Color = theme.textcolor,
-            OutlineColor = theme.textborder,
-            Position = utility:Position(0, 3, 0, 3, section_frame),
-            Visible = page.open
-        }, section.visibleContent);section["section_title"] = section_title
-        --
-        library.colors[section_title] = {
-            OutlineColor = "textborder",
-            Color = "textcolor"
-        }
-        --
-        function section:Update(Padding)
-            section_inline.Size = utility:Size(window.loader and 1 or 0.5, window.loader and -10 or -7, 0, fill and (window.tab_frame.Size.Y - (Padding or 0)) or (size or (section.currentAxis+4)), window.tab_frame)
-            section_outline.Size = utility:Size(1, -2, 1, -2, section_inline)
-            section_frame.Size = utility:Size(1, -2, 1, -2, section_outline)
-        end
-        --
-        page.sectionOffset[side] = page.sectionOffset[side] + 100 + 5
-        page.sections[#page.sections + 1] = section
-        --
-        return setmetatable(section, sections)
-    end
+
     --
     function pages:MultiSection(info)
         local info = info or {}
@@ -3111,6 +3036,9 @@ end
         library.colors[multiSection_frame] = {
             Color = "darkcontrast"
         }
+
+
+        
         --
         local multiSection_backFrame = utility:Create("Frame", {Vector2.new(0,2), multiSection_frame}, {
             Size = utility:Size(1, 0, 0, 17, multiSection_frame),
@@ -3893,51 +3821,67 @@ end
         local lastselection
         --
         function playerList:Refresh(Relation)
-            for Index, Value in pairs(playerList.items) do
-                local Found = playerList.players[Index + playerList.scrollingindex]
-                --
-                if Found then
-                    Value:Set(true, Found)
-                else
-                    Value:Set(false)
-                end
-            end
+    for Index, Value in pairs(playerList.items) do
+        local Found = playerList.players[Index + playerList.scrollingindex]
+        --
+        if Found then
+            Value:Set(true, Found)
+        else
+            Value:Set(false)
+        end
+    end
+    --
+    if Relation then
+        library.Relations[Relation[1].UserId] = Relation[3] ~= "None" and Relation[3] or nil
+    end
+    --
+    playerList_title.Text = ("Player List - %s Players on the server"):format(#playerList.items - 1)
+    --
+    local Selection = playerList:GetSelection()
+    --
+    playerList.buttons[1]:Update(Selection)
+    --
+    window:Move(window.main_frame.Position)
+    --
+    if Selection then
+        if lastselection ~= Selection then
+            lastselection = Selection
             --
-            if Relation then
-                library.Relations[Relation[1].UserId] = Relation[3] ~= "None" and Relation[3] or nil
-            end
+            options_avatar.Data = ""
+            options_loadingtext.Text = "..?"
             --
-            playerList_title.Text = ("Player List - %s Players on the server"):format(#playerList.items - 1)
+            options_title.Text = ("User ID : %s\nDisplay Name : %s\nName : %s\nHealth : %s/%s"):format(Selection[1].UserId, Selection[1].DisplayName ~= "" and Selection[1].DisplayName or Selection[1].Name, Selection[1].Name, "100", "100")
             --
-            local Selection = playerList:GetSelection()
-            --
-            playerList.buttons[1]:Update(Selection)
-            --
-            window:Move(window.main_frame.Position)
-            --
-            if Selection then
-                if lastselection ~= Selection then
-                    lastselection = Selection
-                    --
-                    options_avatar.Data = ""
-                    options_loadingtext.Text = "..?"
-                    --
-                    options_title.Text = ("User ID : %s\nDisplay Name : %s\nName : %s\nHealth : %s/%s"):format(Selection[1].UserId, Selection[1].DisplayName ~= "" and Selection[1].DisplayName or Selection[1].Name, Selection[1].Name, "100", "100")
-                    --
-                    local imagedata = game:HttpGet(("https://www.roblox.com/headshot-thumbnail/image?userId=%s&width=100&height=100&format=png"):format(Selection[1].UserId))
-                    --
+ 
+            local success, response = pcall(function()
+                return game:HttpGet(("https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=%s&size=100x100&format=Png&isCircular=false"):format(Selection[1].UserId))
+            end)
+            
+            if success then
+                local data = game:GetService("HttpService"):JSONDecode(response)
+                if data and data.data and data.data[1] and data.data[1].imageUrl then
+                    local imageUrl = data.data[1].imageUrl
+                    local imagedata = game:HttpGet(imageUrl)
+                    
                     if playerList:GetSelection() == Selection then
                         options_avatar.Data = imagedata
                         options_loadingtext.Text = ""
                     end
+                else
+                    options_loadingtext.Text = "Failed to load"
                 end
             else
-                options_title.Text = "No player selected."
-                options_avatar.Data = ""
-                options_loadingtext.Text = "..?"
-                lastselection = nil
+                options_loadingtext.Text = "Error"
             end
         end
+    else
+        options_title.Text = "No player selected."
+        options_avatar.Data = ""
+        options_loadingtext.Text = "..?"
+        lastselection = nil
+    end
+end
+
         --
         function playerList:Update() end
         --
