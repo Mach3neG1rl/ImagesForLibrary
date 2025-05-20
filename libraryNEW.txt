@@ -3583,7 +3583,7 @@ end
         }, playerList.visibleContent)
         --
         local options_loadingtext = utility:Create("TextLabel", {Vector2.new((options_iconoutline.Size.X / 2) - 1, (options_iconoutline.Size.X / 2) - 10), options_iconframe}, {
-            Text = "..?",
+            Text = "",
             Size = theme.textsize,
             Font = theme.font,
             Color = theme.textdark,
@@ -3920,7 +3920,7 @@ function playerList:Refresh(Relation)
             lastselection = Selection
             --
             options_avatar.Data = ""
-            options_loadingtext.Text = "..?"
+            options_loadingtext.Text = ""
             --
             options_title.Text = ("User ID : %s\nDisplay Name : %s\nName : %s\nHealth : %s/%s"):format(Selection[1].UserId, Selection[1].DisplayName ~= "" and Selection[1].DisplayName or Selection[1].Name, Selection[1].Name, "100", "100")
             --
