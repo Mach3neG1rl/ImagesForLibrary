@@ -3852,26 +3852,39 @@ end
             --
             options_title.Text = ("User ID : %s\nDisplay Name : %s\nName : %s\nHealth : %s/%s"):format(Selection[1].UserId, Selection[1].DisplayName ~= "" and Selection[1].DisplayName or Selection[1].Name, Selection[1].Name, "100", "100")
             --
- 
-            local success, response = pcall(function()
-                return game:HttpGet(("https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=%s&size=100x100&format=Png&isCircular=false"):format(Selection[1].UserId))
+            -- Используем Players:GetUserThumbnailAsync вместо HttpGet
+            local Players = game:GetService("Players")
+            local success, content = pcall(function()
+                local thumbType = Enum.ThumbnailType.HeadShot
+                local thumbSize = Enum.ThumbnailSize.Size100x100
+                return Players:GetUserThumbnailAsync(Selection[1].UserId, thumbType, thumbSize)
             end)
             
-            if success then
-                local data = game:GetService("HttpService"):JSONDecode(response)
-                if data and data.data and data.data[1] and data.data[1].imageUrl then
-                    local imageUrl = data.data[1].imageUrl
-                    local imagedata = game:HttpGet(imageUrl)
-                    
-                    if playerList:GetSelection() == Selection then
-                        options_avatar.Data = imagedata
-                        options_loadingtext.Text = ""
-                    end
-                else
-                    options_loadingtext.Text = "Failed to load"
+            if success and content then
+                if playerList:GetSelection() == Selection then
+                    options_avatar.Data = content
+                    options_loadingtext.Text = ""
                 end
             else
-                options_loadingtext.Text = "Error"
+                -- Альтернативный метод через API, если первый не сработал
+                pcall(function()
+                    local HttpService = game:GetService("HttpService")
+                    local url = string.format("https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=%s&size=100x100&format=Png&isCircular=false", Selection[1].UserId)
+                    local response = HttpService:GetAsync(url)
+                    local data = HttpService:JSONDecode(response)
+                    
+                    if data and data.data and data.data[1] and data.data[1].imageUrl then
+                        local imageUrl = data.data[1].imageUrl
+                        local imageData = game:HttpGet(imageUrl)
+                        
+                        if playerList:GetSelection() == Selection then
+                            options_avatar.Data = imageData
+                            options_loadingtext.Text = ""
+                        end
+                    else
+                        options_loadingtext.Text = "Failed to load"
+                    end
+                end)
             end
         end
     else
