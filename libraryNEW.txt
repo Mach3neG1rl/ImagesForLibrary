@@ -3907,7 +3907,7 @@ function playerList:Refresh(Relation)
         library.Relations[Relation[1].UserId] = Relation[3] ~= "None" and Relation[3] or nil
     end
     --
-    playerList_title.Text = ("Player List - %s Players on the server"):format(#playerList.items - 1)
+    playerList_title.Text = ("Player List - %s Players on the server"):format(#game:GetService("Players"):GetPlayers())
     --
     local Selection = playerList:GetSelection()
     --
