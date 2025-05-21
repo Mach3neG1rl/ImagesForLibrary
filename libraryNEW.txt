@@ -95,16 +95,6 @@ local themes = {
         ['textborder'] = Color3.fromRGB(0,0,0);
         ['cursoroutline'] = Color3.fromRGB(10,10,10);
     };
-    ["Dracula"] = {
-        ['accent'] = Color3.fromRGB(125,104,142);
-        ['lightcontrast'] = Color3.fromRGB(35,37,48);
-        ['darkcontrast'] = Color3.fromRGB(30,31,40);
-        ['outline'] = Color3.fromRGB(29,30,39);
-        ['inline'] = Color3.fromRGB(49,45,62);
-        ['textcolor'] = Color3.fromRGB(255,255,255);
-        ['textborder'] = Color3.fromRGB(0,0,0);
-        ['cursoroutline'] = Color3.fromRGB(10,10,10);
-    };
     ["Neverlose"] = {
         ['accent'] = Color3.fromRGB(0,158,210);
         ['lightcontrast'] = Color3.fromRGB(0,13,23);
@@ -224,7 +214,29 @@ local themes = {
         ['textcolor'] = Color3.fromRGB(255,255,255);
         ['textborder'] = Color3.fromRGB(0,0,0);
         ['cursoroutline'] = Color3.fromRGB(10,10,10);
-	}
+	};
+    ["Midnight"] = {
+        ['accent'] = Color3.fromRGB(103, 89, 179);
+        ['lightcontrast'] = Color3.fromRGB(25, 25, 35);
+        ['darkcontrast'] = Color3.fromRGB(15, 15, 25);
+        ['outline'] = Color3.fromRGB(0, 0, 0);
+        ['inline'] = Color3.fromRGB(40, 40, 50);
+        ['textcolor'] = Color3.fromRGB(255, 255, 255);
+        ['textdark'] = Color3.fromRGB(175, 175, 175);
+        ['textborder'] = Color3.fromRGB(0, 0, 0);
+        ['cursoroutline'] = Color3.fromRGB(10, 10, 10);
+    };
+    ["Sakura"] = {
+        ['accent'] = Color3.fromRGB(235, 111, 146);
+        ['lightcontrast'] = Color3.fromRGB(35, 26, 40);
+        ['darkcontrast'] = Color3.fromRGB(25, 18, 30);
+        ['outline'] = Color3.fromRGB(0, 0, 0);
+        ['inline'] = Color3.fromRGB(50, 38, 55);
+        ['textcolor'] = Color3.fromRGB(255, 255, 255);
+        ['textdark'] = Color3.fromRGB(175, 175, 175);
+        ['textborder'] = Color3.fromRGB(0, 0, 0);
+        ['cursoroutline'] = Color3.fromRGB(10, 10, 10);
+    };
 }
 
 -- // utility Functions
