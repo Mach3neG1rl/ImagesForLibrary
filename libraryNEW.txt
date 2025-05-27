@@ -95,6 +95,16 @@ local themes = {
         ['textborder'] = Color3.fromRGB(0,0,0);
         ['cursoroutline'] = Color3.fromRGB(10,10,10);
     };
+    ["Idk"] = {
+        ['accent'] = Color3.fromRGB(187,135,154);
+        ['lightcontrast'] = Color3.fromRGB(56,54,61);
+        ['darkcontrast'] = Color3.fromRGB(40,39,46);
+        ['outline'] = Color3.fromRGB(0,0,0);
+        ['inline'] = Color3.fromRGB(63,63,67);
+        ['textcolor'] = Color3.fromRGB(255,255,255);
+        ['textborder'] = Color3.fromRGB(0,0,0);
+        ['cursoroutline'] = Color3.fromRGB(10,10,10);
+    };
     ["Neverlose"] = {
         ['accent'] = Color3.fromRGB(0,158,210);
         ['lightcontrast'] = Color3.fromRGB(0,13,23);
