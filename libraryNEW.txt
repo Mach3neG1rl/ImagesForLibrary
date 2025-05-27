@@ -613,7 +613,7 @@ do
         theme.accent = accent
         --
         
-        local window = {pages = {}, loader = true, isVisible = false, pageammount = pageammount, callback = callback, wminfo = "Tricked | Ping: $PING | Fps: $FPS | Time: $TIME", currentPage = nil, fading = false, dragging = false, drag = Vector2.new(0,0), currentContent = {frame = nil, dropdown = nil, multibox = nil, colorpicker = nil, keybind = nil, textbox = nil}}
+        local window = {pages = {}, loader = true, isVisible = false, pageammount = pageammount, callback = callback, wminfo = "Tricked | Ping: $PING | Fps: $FPS | Time: $TIME | $DATE", currentPage = nil, fading = false, dragging = false, drag = Vector2.new(0,0), currentContent = {frame = nil, dropdown = nil, multibox = nil, colorpicker = nil, keybind = nil, textbox = nil}}
         --
         local main_frame = utility:Create("Frame", {Vector2.new(0,0)}, {
             Size = utility:Size(0, size.X, 0, size.Y),
@@ -1080,7 +1080,7 @@ do
         --
         theme.accent = accent
         --
-        local window = {pages = {}, loader = style == 2, init = false, pageammount = pageammount, isVisible = false, callback = callback, uibind = Enum.KeyCode.Insert, wminfo = "Tricked | Ping: $PING | Fps: $FPS | Time: $TIME", currentPage = nil, fading = false, dragging = false, drag = Vector2.new(0,0), currentContent = {frame = nil, dropdown = nil, multibox = nil, colorpicker = nil, keybind = nil, textbox = nil}}
+        local window = {pages = {}, loader = style == 2, init = false, pageammount = pageammount, isVisible = false, callback = callback, uibind = Enum.KeyCode.Insert, wminfo = "Tricked | Ping: $PING | Fps: $FPS | Time: $TIME | $DATE", currentPage = nil, fading = false, dragging = false, drag = Vector2.new(0,0), currentContent = {frame = nil, dropdown = nil, multibox = nil, colorpicker = nil, keybind = nil, textbox = nil}}
         --
         local main_frame = utility:Create("Frame", {Vector2.new(0,0)}, {
             Size = utility:Size(0, size.X, 0, size.Y),
@@ -2068,19 +2068,21 @@ end
                 library.shared.fps = math.floor(1 / math.abs(temp - tick()))
                 temp = tick()
                 library.shared.ping = stats.Network:FindFirstChild("ServerStatsItem") and tostring(math.round(stats.Network.ServerStatsItem["Data Ping"]:GetValue())) or "Unknown"
-    
+
                 local currentTime = os.date("%H:%M:%S")
-    
+                local currentDate = os.date("%B %d")
+
                 task.spawn(function()
                     if (tick() - Tick) > 0.15 then
-                        watermark_title.Text = window.wminfo:gsub("$PING", library.shared.ping):gsub("$FPS", library.shared.fps):gsub("$TIME", currentTime)
-                        window.watermark:UpdateSize()
-            
-                        Tick = tick()
-                    end
-                end)
+                    local watermarkText = window.wminfo:gsub("$PING", library.shared.ping):gsub("$FPS", library.shared.fps):gsub("$TIME", currentTime):gsub("$DATE", currentDate)
+                    watermark_title.Text = watermarkText
+                    window.watermark:UpdateSize()
+
+                    Tick = tick()
+                end
             end)
-            --
+        end)
+        --
             return window.watermark
         end
         --
