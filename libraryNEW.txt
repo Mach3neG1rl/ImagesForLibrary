@@ -615,6 +615,45 @@ do
         
         local window = {pages = {}, loader = true, isVisible = false, pageammount = pageammount, callback = callback, wminfo = "Tricked | Ping: $PING | Fps: $FPS | Time: $TIME | $DATE", currentPage = nil, fading = false, dragging = false, drag = Vector2.new(0,0), currentContent = {frame = nil, dropdown = nil, multibox = nil, colorpicker = nil, keybind = nil, textbox = nil}}
         --
+        local ESC_ACTION_NAME = "TrapEscape_" .. tostring(math.random(1, 10^9)) -- need
+
+        local function TrapEscape(actionName, inputState, inputObject)
+            if inputState == Enum.UserInputState.Begin and inputObject.KeyCode == Enum.KeyCode.Escape then
+                local hasOpenContent = window
+            and window.isVisible
+            and window.currentContent
+            and (
+                window.currentContent.dropdown
+                or window.currentContent.multibox
+                or window.currentContent.colorpicker
+                or window.currentContent.keybind
+                or window.currentContent.textbox
+            )
+
+        if hasOpenContent then
+            if window.CloseContent then
+                window:CloseContent()
+            end
+            return Enum.ContextActionResult.Sink -- не открываем меню Roblox
+        end
+
+            return Enum.ContextActionResult.Pass
+        end
+            return Enum.ContextActionResult.Pass
+        end
+
+        cas:BindActionAtPriority(ESC_ACTION_NAME, TrapEscape, false, 3000, Enum.KeyCode.Escape)
+
+        local _oldUnload = window.Unload
+        function window:Unload(...)
+            pcall(function()
+                cas:UnbindAction(ESC_ACTION_NAME)
+            end)
+                if _oldUnload then
+                return _oldUnload(self, ...)
+            end
+        end
+        --
         local main_frame = utility:Create("Frame", {Vector2.new(0,0)}, {
             Size = utility:Size(0, size.X, 0, size.Y),
             Position = utility:Position(0.5, -(size.X/2) ,0.5, -(size.Y/2)),
@@ -1092,6 +1131,45 @@ do
         theme.accent = accent
         --
         local window = {pages = {}, loader = style == 2, init = false, pageammount = pageammount, isVisible = false, callback = callback, uibind = Enum.KeyCode.Insert, wminfo = "Tricked | Ping: $PING | Fps: $FPS | Time: $TIME | $DATE", currentPage = nil, fading = false, dragging = false, drag = Vector2.new(0,0), currentContent = {frame = nil, dropdown = nil, multibox = nil, colorpicker = nil, keybind = nil, textbox = nil}}
+        --
+        local ESC_ACTION_NAME = "TrapEscape_" .. tostring(math.random(1, 10^9)) -- need
+
+        local function TrapEscape(actionName, inputState, inputObject)
+            if inputState == Enum.UserInputState.Begin and inputObject.KeyCode == Enum.KeyCode.Escape then
+                local hasOpenContent = window
+            and window.isVisible
+            and window.currentContent
+            and (
+                window.currentContent.dropdown
+                or window.currentContent.multibox
+                or window.currentContent.colorpicker
+                or window.currentContent.keybind
+                or window.currentContent.textbox
+            )
+
+        if hasOpenContent then
+            if window.CloseContent then
+                window:CloseContent()
+            end
+            return Enum.ContextActionResult.Sink -- не открываем меню Roblox
+        end
+
+            return Enum.ContextActionResult.Pass
+        end
+            return Enum.ContextActionResult.Pass
+        end
+
+        cas:BindActionAtPriority(ESC_ACTION_NAME, TrapEscape, false, 3000, Enum.KeyCode.Escape)
+
+        local _oldUnload = window.Unload
+        function window:Unload(...)
+            pcall(function()
+                cas:UnbindAction(ESC_ACTION_NAME)
+            end)
+                if _oldUnload then
+                return _oldUnload(self, ...)
+            end
+        end
         --
         local main_frame = utility:Create("Frame", {Vector2.new(0,0)}, {
             Size = utility:Size(0, size.X, 0, size.Y),
