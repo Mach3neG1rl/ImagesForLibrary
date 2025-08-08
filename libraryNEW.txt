@@ -2022,7 +2022,6 @@ end
 window.watermark.dragging = false
 window.watermark.drag = Vector2.new(0, 0)
 
--- Добавьте обработчики событий для перетаскивания
 library.began[#library.began + 1] = function(Input)
     if Input.UserInputType == Enum.UserInputType.MouseButton1 and window.watermark.visible and utility:MouseOverDrawing({
         watermark_outline.Position.X, 
@@ -5150,6 +5149,54 @@ end
         --
         utility:LoadImage(slider__gradient, "gradient", "https://raw.githubusercontent.com/Mach3neG1rl/ImagesForLibrary/refs/heads/main/gradient.png")
         --
+        local plusDetector = utility:Create("Frame", {Vector2.new(slider_outline.Size.X - 28, 1), slider_outline}, {
+            Size = utility:Size(0, 14, 0, 14),
+            Position = utility:Position(1, -28, 0, 1, slider_outline),
+            Color = Color3.fromRGB(0, 0, 0),
+            Transparency = 0,
+            Visible = page.open
+        }, section.visibleContent)
+
+        local minusDetector = utility:Create("Frame", {Vector2.new(slider_outline.Size.X - 14, 1), slider_outline}, {
+            Size = utility:Size(0, 14, 0, 14),
+            Position = utility:Position(1, -14, 0, 1, slider_outline),
+            Color = Color3.fromRGB(0, 0, 0),
+            Transparency = 0,
+            Visible = page.open
+        }, section.visibleContent)
+
+        local plusText = utility:Create("TextLabel", {Vector2.new(7, -1), plusDetector}, {
+            Text = "+",
+            Size = theme.textsize,
+            Font = theme.font,
+            Color = theme.textcolor,
+            OutlineColor = theme.textborder,
+            Center = true,
+            Position = utility:Position(0.5, 0, 0, -1, plusDetector),
+            Visible = page.open
+        }, section.visibleContent)
+
+        library.colors[plusText] = {
+            OutlineColor = "textborder",
+            Color = "textcolor"
+        }
+
+        local minusText = utility:Create("TextLabel", {Vector2.new(7, -1), minusDetector}, {
+            Text = "-",
+            Size = theme.textsize,
+            Font = theme.font,
+            Color = theme.textcolor,
+            OutlineColor = theme.textborder,
+            Center = true,
+            Position = utility:Position(0.5, 0, 0, -1, minusDetector),
+            Visible = page.open
+        }, section.visibleContent)
+
+        library.colors[minusText] = {
+            OutlineColor = "textborder",
+            Color = "textcolor"
+        }
+        --
         function slider:Set(value)
             local oldval = slider.current
             --
@@ -5185,6 +5232,18 @@ end
                 slider:Refresh()
             end
         end
+        -- +- 
+        if Input.UserInputType == Enum.UserInputType.MouseButton1 and plusDetector.Visible and window.isVisible and page.open and utility:MouseOverDrawing({plusDetector.Position.X, plusDetector.Position.Y, plusDetector.Position.X + plusDetector.Size.X, plusDetector.Position.Y + plusDetector.Size.Y}) and not window:IsOverContent() then
+            local step = uis:IsKeyDown(Enum.KeyCode.LeftShift) and 10 or (1 / slider.decimals)
+            local newValue = math.clamp(slider.current + step, slider.min, slider.max)
+            slider:Set(newValue)
+        end
+
+        if Input.UserInputType == Enum.UserInputType.MouseButton1 and minusDetector.Visible and window.isVisible and page.open and utility:MouseOverDrawing({minusDetector.Position.X, minusDetector.Position.Y, minusDetector.Position.X + minusDetector.Size.X, minusDetector.Position.Y + minusDetector.Size.Y}) and not window:IsOverContent() then
+            local step = uis:IsKeyDown(Enum.KeyCode.LeftShift) and 10 or (1 / slider.decimals)
+            local newValue = math.clamp(slider.current - step, slider.min, slider.max)
+            slider:Set(newValue)
+        end
         --
         library.ended[#library.ended + 1] = function(Input)
             if Input.UserInputType == Enum.UserInputType.MouseButton1 and slider.holding and window.isVisible then
@@ -5196,6 +5255,37 @@ end
             if slider.holding and window.isVisible then
                 slider:Refresh()
             end
+        end
+        --
+        library.changed[#library.changed + 1] = function(Input)
+            if slider.holding and window.isVisible then
+        slider:Refresh()
+    end
+end
+--
+library.began[#library.began + 1] = function(Input)
+    if Input.UserInputType == Enum.UserInputType.MouseMovement and window.isVisible and page.open then
+
+        if utility:MouseOverDrawing({plusDetector.Position.X, plusDetector.Position.Y, plusDetector.Position.X + plusDetector.Size.X, plusDetector.Position.Y + plusDetector.Size.Y}) then
+            plusText.Color = theme.accent
+            library.colors[plusText].Color = "accent"
+        else
+            plusText.Color = theme.textcolor
+            library.colors[plusText].Color = "textcolor"
+        end
+        
+        if utility:MouseOverDrawing({minusDetector.Position.X, minusDetector.Position.Y, minusDetector.Position.X + minusDetector.Size.X, minusDetector.Position.Y + minusDetector.Size.Y}) then
+                    minusText.Color = theme.accent
+                    library.colors[minusText].Color = "accent"
+                else
+                    minusText.Color = theme.textcolor
+                    library.colors[minusText].Color = "textcolor"
+                end
+            end
+        end
+        --
+        if pointer and tostring(pointer) ~= "" and tostring(pointer) ~= " " and not library.pointers[tostring(pointer)] then
+            library.pointers[tostring(pointer)] = slider
         end
         --
         if pointer and tostring(pointer) ~= "" and tostring(pointer) ~= " " and not library.pointers[tostring(pointer)] then
