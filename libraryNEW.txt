@@ -3940,51 +3940,47 @@ function playerList:Refresh(Relation)
             --
             options_avatar.Data = ""
             options_loadingtext.Text = "?"
+            --
+            options_title.Text = ("User ID : %s\nDisplay Name : %s\nName : %s\nHealth : %s/%s"):format(Selection[1].UserId, Selection[1].DisplayName ~= "" and Selection[1].DisplayName or Selection[1].Name, Selection[1].Name, "100", "100")
+            --
 
-            options_title.Text = ("User ID : %s\nDisplay Name : %s\nName : %s\nHealth : %s/%s"):format(
-                    Selection.UserId,[1]
-                        (Selection.DisplayName ~= "" and Selection.DisplayName or Selection.Name),[1]
-                    Selection.Name,[1]
-                "100",
-                "100"
-            )
+            local userId = Selection[1].UserId
 
-do
-    local userId = Selection.UserId
-    local thisSelection = Selection
-    
-    options_avatar.Data = ""
-    options_loadingtext.Text = "?"
-    
-    task.spawn(function()
-        local imageData = nil
-        local ok = pcall(function()
-            local apiUrl = ("https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=%d&size=100x100&format=Png"):format(userId)
-            local resp = game:GetService("HttpService"):JSONDecode(game:HttpGet(apiUrl))
-            local url = resp and resp.data and resp.data[1] and resp.data[1].imageUrl
-            if url then
-                imageData = game:HttpGet(url)
-            end
-        end)
-        
-        if playerList:GetSelection() == thisSelection then
-                    if ok and imageData then
-                        options_avatar.Data = imageData
-                        options_loadingtext.Text = ""
+            local thumbUrl = "rbxthumb://type=AvatarHeadShot&id=" .. userId .. "&w=100&h=100"
+            local success, content = pcall(function()
+                return game:HttpGet(thumbUrl)
+            end)
+            
+            if success and content then
+                options_avatar.Data = content
+                options_loadingtext.Text = ""
+            else
+
+                pcall(function()
+                    local apiUrl = "https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=" .. userId .. "&size=100x100&format=Png"
+                    local response = game:GetService("HttpService"):JSONDecode(game:HttpGet(apiUrl))
+                    
+                    if response and response.data and response.data[1] and response.data[1].imageUrl then
+                        local imageUrl = response.data[1].imageUrl
+                        local imageData = game:HttpGet(imageUrl)
+                        
+                        if playerList:GetSelection() == Selection then
+                            options_avatar.Data = imageData
+                            options_loadingtext.Text = ""
+                        end
                     else
-                        options_avatar.Data = ""
                         options_loadingtext.Text = "Failed to load"
                     end
-                end
-            end)
-        end
-            else
-                options_title.Text = "No player selected."
-                options_avatar.Data = ""
-                options_loadingtext.Text = "?"
-                lastselection = nil
+                end)
             end
         end
+    else
+        options_title.Text = "No player selected."
+        options_avatar.Data = ""
+        options_loadingtext.Text = "?"
+        lastselection = nil
+    end
+end
         --
         function playerList:Update() end
         --
