@@ -1,4 +1,4 @@
-        -- // Variables
+-- // Variables
 local ws, uis, rs, hs, cas, plrs, stats = game:GetService("Workspace"), game:GetService("UserInputService"), game:GetService("RunService"), game:GetService("HttpService"), game:GetService("ContextActionService"), game:GetService("Players"), game:GetService("Stats")
 --
 local localplayer = plrs.LocalPlayer
@@ -87,16 +87,6 @@ local themes = {
     },
     ["Entropy"] = {
         ['accent'] = Color3.fromRGB(147,188,222);
-        ['lightcontrast'] = Color3.fromRGB(56,54,61);
-        ['darkcontrast'] = Color3.fromRGB(40,39,46);
-        ['outline'] = Color3.fromRGB(0,0,0);
-        ['inline'] = Color3.fromRGB(63,63,67);
-        ['textcolor'] = Color3.fromRGB(255,255,255);
-        ['textborder'] = Color3.fromRGB(0,0,0);
-        ['cursoroutline'] = Color3.fromRGB(10,10,10);
-    };
-    ["Idk"] = {
-        ['accent'] = Color3.fromRGB(187,135,154);
         ['lightcontrast'] = Color3.fromRGB(56,54,61);
         ['darkcontrast'] = Color3.fromRGB(40,39,46);
         ['outline'] = Color3.fromRGB(0,0,0);
@@ -1030,6 +1020,17 @@ do
         end
         --
         utility:Connection(uis.InputBegan,function(Input)
+                if window.isVisible and Input.KeyCode == Enum.KeyCode.Escape then -- idk why, (ff) 
+                    if window.currentContent
+                        and (window.currentContent.dropdown
+                            or window.currentContent.multibox
+                            or window.currentContent.colorpicker
+                            or window.currentContent.keybind
+                            or window.currentContent.textbox) then
+                        window:CloseContent()
+                    return
+                end
+            end
             for _, func in pairs(library.began) do
                 if not window.dragging then
                     local e,s = pcall(function()
@@ -1295,7 +1296,7 @@ do
             }
             --
             local esppreview_title = utility:Create("TextLabel", {Vector2.new(4,2), esppreview_inner}, {
-                Text = "ESP Preview",
+                Text = "Preview",
                 Size = theme.textsize,
                 Font = theme.font,
                 Color = theme.textcolor,
@@ -1475,6 +1476,7 @@ end
             end
             --
             do -- Preview Stuff
+                -- Box Esp Stuff
                 local preview_boxoutline = utility:Create("Frame", {Vector2.new(esppreview_frame_previewbox.Size.X - BoxSize.X - 1, 20), esppreview_frame_previewbox}, {
                     Size = BoxSize,
                     Position = utility:Position(1, -(BoxSize.X - 1), 0, 20, esppreview_frame_previewbox),
@@ -1482,7 +1484,7 @@ end
                     Filled = false,
                     Thickness = 2.5
                 }, window.VisualPreview.Drawings);boxoutline = preview_boxoutline
-                --
+
                 local preview_box = utility:Create("Frame", {Vector2.new(0, 0), preview_boxoutline}, {
                     Size = utility:Size(1, 0, 1, 0, preview_boxoutline),
                     Position = utility:Position(0, 0, 0, 0, preview_boxoutline),
@@ -1491,13 +1493,14 @@ end
                     Thickness = 0.6
                 }, window.VisualPreview.Drawings)
                 --
+                -- Health Bar Stuff
                 local preview_heatlhbaroutline = utility:Create("Frame", {Vector2.new(-6, -1), preview_boxoutline}, {
                     Size = utility:Size(0, 4, 1, 2, preview_boxoutline),
                     Position = utility:Position(0, -6, 0, -1, preview_boxoutline),
                     Color = Color3.fromRGB(0, 0, 0),
                     Filled = true
                 }, window.VisualPreview.Drawings);healthbaroutline = preview_heatlhbaroutline
-                --
+
                 local preview_heatlhbar = utility:Create("Frame", {Vector2.new(1, 1), preview_heatlhbaroutline}, {
                     Size = utility:Size(1, -2, 1, -2, preview_heatlhbaroutline),
                     Position = utility:Position(0, 1, 0, 1, preview_heatlhbaroutline),
@@ -1505,6 +1508,7 @@ end
                     Filled = true
                 }, window.VisualPreview.Drawings);healthbar = preview_heatlhbar
                 --
+                -- Player Name Stiff
                 local preview_title = utility:Create("TextLabel", {Vector2.new(preview_box.Size.X / 2, -20), preview_box}, {
                     Text = "Username",
                     Size = theme.textsize,
@@ -1515,6 +1519,7 @@ end
                     Position = utility:Position(0.5, 0, 0, -20, preview_box)
                 }, window.VisualPreview.Drawings)
                 --
+                -- Distance Stuff
                 local preview_distance = utility:Create("TextLabel", {Vector2.new(preview_box.Size.X / 2, preview_box.Size.Y + 5), preview_box}, {
                     Text = "25m",
                     Size = theme.textsize,
@@ -1525,6 +1530,7 @@ end
                     Position = utility:Position(0.5, 0, 1, 5, preview_box)
                 }, window.VisualPreview.Drawings)
                 --
+                -- Weapon Stuff
                 local preview_tool = utility:Create("TextLabel", {Vector2.new(preview_box.Size.X / 2, preview_box.Size.Y + 20), preview_box}, {
                     Text = "Weapon",
                     Size = theme.textsize,
@@ -2786,6 +2792,17 @@ end
         end
         --
         utility:Connection(uis.InputBegan,function(Input)
+                if window.isVisible and Input.KeyCode == Enum.KeyCode.Escape then -- idk why, (ff) 
+                    if window.currentContent
+                        and (window.currentContent.dropdown
+                            or window.currentContent.multibox
+                            or window.currentContent.colorpicker
+                            or window.currentContent.keybind
+                            or window.currentContent.textbox) then
+                        window:CloseContent()
+                    return
+                end
+            end
             for _, func in pairs(library.began) do
                 if not window.dragging then
                     local e,s = pcall(function()
