@@ -615,44 +615,6 @@ do
         
         local window = {pages = {}, loader = true, isVisible = false, pageammount = pageammount, callback = callback, wminfo = "Tricked | Ping: $PING | Fps: $FPS | Time: $TIME | $DATE", currentPage = nil, fading = false, dragging = false, drag = Vector2.new(0,0), currentContent = {frame = nil, dropdown = nil, multibox = nil, colorpicker = nil, keybind = nil, textbox = nil}}
         --
--- Управление блокировкой системного меню Roblox
-function window:UpdateModalState()
-    if window.isVisible then
-        uis.ModalEnabled = false -- Блокируем все системные UI Roblox
-    else
-        uis.ModalEnabled = true  -- Разблокируем
-    end
-end
-
--- Вызываем при изменении видимости окна
-local _oldFade = window.Fade
-function window:Fade()
-    _oldFade(self)
-    window:UpdateModalState()
-end
-
--- Вызываем при инициализации
-local _oldInitialize = window.Initialize
-function window:Initialize()
-    if _oldInitialize then
-        _oldInitialize(self)
-    end
-    window:UpdateModalState()
-end
-
--- Обязательно разблокируем при выгрузке
-local _oldUnload = window.Unload
-function window:Unload(...)
-    uis.ModalEnabled = true -- Важно! Разблокируем перед выгрузкой
-    if _oldUnload then
-        return _oldUnload(self, ...)
-    end
-end
-
--- Сразу устанавливаем правильное состояние
-window:UpdateModalState()
-
-        --
         local main_frame = utility:Create("Frame", {Vector2.new(0,0)}, {
             Size = utility:Size(0, size.X, 0, size.Y),
             Position = utility:Position(0.5, -(size.X/2) ,0.5, -(size.Y/2)),
@@ -1130,38 +1092,6 @@ window:UpdateModalState()
         theme.accent = accent
         --
         local window = {pages = {}, loader = style == 2, init = false, pageammount = pageammount, isVisible = false, callback = callback, uibind = Enum.KeyCode.Insert, wminfo = "Tricked | Ping: $PING | Fps: $FPS | Time: $TIME | $DATE", currentPage = nil, fading = false, dragging = false, drag = Vector2.new(0,0), currentContent = {frame = nil, dropdown = nil, multibox = nil, colorpicker = nil, keybind = nil, textbox = nil}}
-        --
-function window:UpdateModalState()
-    if window.isVisible then
-        uis.ModalEnabled = false 
-    else
-        uis.ModalEnabled = true 
-    end
-end
-
-local _oldFade = window.Fade
-function window:Fade()
-    _oldFade(self)
-    window:UpdateModalState()
-end
-
-local _oldInitialize = window.Initialize
-function window:Initialize()
-    if _oldInitialize then
-        _oldInitialize(self)
-    end
-    window:UpdateModalState()
-end
-
-local _oldUnload = window.Unload
-function window:Unload(...)
-    uis.ModalEnabled = true 
-    if _oldUnload then
-        return _oldUnload(self, ...)
-    end
-end
-
-window:UpdateModalState()
         --
         local main_frame = utility:Create("Frame", {Vector2.new(0,0)}, {
             Size = utility:Size(0, size.X, 0, size.Y),
