@@ -1,3 +1,6 @@
+-- REASON: Dumbass customer put their library in a request and flexed his non existant security and ended up getting it leaked by himself... 😭
+-- The code here is horrendous this is my 2nd library, the added on code was made to suit the old code however I should have just converted to a newer version of my code kind of an oopsie. 
+
 -- variables
 	local uis = cloneref(game:GetService("UserInputService"))
 	local players = cloneref(game:GetService("Players"))
@@ -1630,11 +1633,11 @@
 					image = "rbxassetid://115194686863276",
 				})
 
-				local watermark = library:watermark({default = os.date('Tricked | %B, %d %Y | Time: %H:%M:%S')})  
+				local watermark = library:watermark({default = os.date('Tricked | %B, %d, %Y | Time: %H:%M:%S')})  
 
 				task.spawn(function()
 					while task.wait(1) do 
-						watermark.change_text(os.date('Tricked | %B, %d %Y | Time: %H:%M:%S'))
+						watermark.change_text(os.date('Tricked | %B, %d, %Y | Time: %H:%M:%S'))
 					end 
 				end) 
 
@@ -1825,7 +1828,7 @@
 
 		function library:watermark(options) 
 			local cfg = {
-				default = options.text or options.default or os.date('Tricked | %B, %d %Y | Time: %H:%M:%S')
+				default = options.text or options.default or os.date('Tricked | %B %d, %Y | Time: %H:%M:%S')
 			}
 
 			local watermark_outline = library:create("Frame", {
@@ -5923,6 +5926,5 @@
 		end 
 	-- 
 -- 
-
 
 return library, themes; 
