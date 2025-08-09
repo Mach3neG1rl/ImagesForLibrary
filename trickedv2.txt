@@ -1632,11 +1632,19 @@
 
 				local watermark = library:watermark({default = os.date('Tricked | %B %d, %Y | Time: %H:%M:%S')})  
 
+				local fpsValue = 0
+				library:connection(run.RenderStepped, function(deltaTime)
+    				fpsValue = 1 / deltaTime
+				end)
+
 				task.spawn(function()
-					while task.wait(1) do 
-						watermark.change_text(os.date('Tricked | %B %d, %Y | Time: %H:%M:%S'))
-					end 
-				end) 
+    				while task.wait(1) do
+        				local pingValue = floor(stats.Network.Ping)
+       					local dateTimeString = os.date('%B %d, Time: %H:%M:%S') 
+        				local watermarkText = string.format("Tricked | Fps: %d | Ping: %d | %s", floor(fpsValue), pingValue, dateTimeString)
+        				watermark.change_text(watermarkText)
+    				end
+				end)
 
 				local items = style.items
 
