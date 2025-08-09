@@ -1630,21 +1630,13 @@
 					image = "rbxassetid://115194686863276",
 				})
 
-				local watermark = library:watermark({default = os.date('Tricked | Fps: %d | Ping: %d | %s')})  
-
-				local fpsValue = 0
-				library:connection(run.RenderStepped, function(deltaTime)
-    				fpsValue = 1 / deltaTime
-				end)
+				local watermark = library:watermark({default = os.date('Tricked | %B %d, %Y | Time: %H:%M:%S')})  
 
 				task.spawn(function()
-    				while task.wait(1) do
-        				local pingValue = floor(stats.Network.Ping)
-       					local dateTimeString = os.date('%B %d, Time: %H:%M:%S') 
-        				local watermarkText = string.format("Tricked | Fps: %d | Ping: %d | %s", floor(fpsValue), pingValue, dateTimeString)
-        				watermark.change_text(watermarkText)
-    				end
-				end)
+					while task.wait(1) do 
+						watermark.change_text(os.date('Tricked | %B %d, %Y | Time: %H:%M:%S'))
+					end 
+				end) 
 
 				local items = style.items
 
@@ -1833,7 +1825,7 @@
 
 		function library:watermark(options) 
 			local cfg = {
-				default = options.text or options.default or os.date('Tricked | Fps: %d | Ping: %d | %s')
+				default = options.text or options.default or os.date('Tricked | %B %d, %Y | Time: %H:%M:%S')
 			}
 
 			local watermark_outline = library:create("Frame", {
