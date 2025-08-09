@@ -1630,7 +1630,7 @@
 					image = "rbxassetid://115194686863276",
 				})
 
-				local watermark = library:watermark({default = os.date('Tricked | %B %d, %Y | Time: %H:%M:%S')})  
+				local watermark = library:watermark({default = os.date('Tricked | Fps: %d | Ping: %d | %s')})  
 
 				local fpsValue = 0
 				library:connection(run.RenderStepped, function(deltaTime)
@@ -1833,7 +1833,7 @@
 
 		function library:watermark(options) 
 			local cfg = {
-				default = options.text or options.default or os.date('Tricked | %B %d, %Y | Time: %H:%M:%S')
+				default = options.text or options.default or os.date('Tricked | Fps: %d | Ping: %d | %s')
 			}
 
 			local watermark_outline = library:create("Frame", {
