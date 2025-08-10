@@ -1931,21 +1931,28 @@
 
 		function library:esp_preview(properties)
 			local cfg = {items = {}, rotation = 0; objects = {};}
-
-    	local default_flags = {
-        	["Name_Color"] = {Color = themes.preset.text},
-        	["Distance_Color"] = {Color = themes.preset.text},
-       		["Weapon_Color"] = {Color = themes.preset.text},
-        	["Box_Color"] = {Color = themes.preset.accent},
-        	["Health_Low"] = {Color = rgb(255, 0, 0)},
-        	["Health_High"] = {Color = rgb(0, 255, 0)}
-    	}
+    	
+			local required_flags = {
+        		["Name_Color"] = {Color = themes.preset.text},
+        		["Distance_Color"] = {Color = themes.preset.text},
+        		["Weapon_Color"] = {Color = themes.preset.text},
+       		 	["Box_Color"] = {Color = themes.preset.accent},
+        		["Health_Low"] = {Color = rgb(255, 0, 0)},
+        		["Health_High"] = {Color = rgb(0, 255, 0)},
+        		["Enabled"] = true,
+        		["Names"] = true,
+        		["Healthbar"] = true,
+       	 		["Distance"] = true,
+        		["Weapon"] = true,
+        		["Boxes"] = true,
+        		["Box_Type"] = "Normal"
+   		 	}
     
-    	for flag_name, default_value in pairs(default_flags) do
-        	if not flags[flag_name] then
+    		for flag_name, default_value in pairs(required_flags) do
+        		if not flags[flag_name] then
             		flags[flag_name] = default_value
         		end
-    		end
+   	 		end
 
 			lp.Character.Archivable = true
 			local character = lp.Character:Clone()
