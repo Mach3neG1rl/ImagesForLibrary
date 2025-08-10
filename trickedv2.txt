@@ -1786,7 +1786,7 @@
 					end})
 			-- 
 					
-			-- esp preview
+			--[[-- esp preview
 				local holder = library:panel({
 					name = "ESP Preview", 
 					anchor_point = vec2(0, 0),
@@ -1799,7 +1799,7 @@
 				
 				local column = setmetatable(items, library):column() 
 				window.esp_section = column:section({name = ""})
-			--  
+			-- ]] 
 
 			-- playerlist 
 				local holder = library:panel({
