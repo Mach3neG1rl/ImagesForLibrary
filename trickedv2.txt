@@ -1930,8 +1930,7 @@
 		end 
 
 		function library:esp_preview(properties)
-    			return setmetatable({items = {}, objects = {}, refresh_elements = function() end}, library)
-			end
+			local cfg = {items = {}, rotation = 0; objects = {};}
 
 			lp.Character.Archivable = true
 			local character = lp.Character:Clone()
