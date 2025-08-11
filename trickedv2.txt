@@ -1816,8 +1816,8 @@
 				})  
 				
 				holder.items.sgui.Enabled = false
-				local items = holder.items
 
+				local items = holder.items
 				local column = setmetatable(items, library):column() 
 				local section = column:section({name = "Playerlist"})
 				local playerlist = section:playerlist({})
