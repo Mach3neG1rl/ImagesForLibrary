@@ -1736,6 +1736,8 @@
 					image = "rbxassetid://105199726008012",
 				}) 
 
+				holder.items.sgui.Enabled = false
+
 				local items = holder.items
 
 				getgenv().load_config = function(name)
