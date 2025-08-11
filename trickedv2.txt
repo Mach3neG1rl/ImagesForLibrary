@@ -1809,7 +1809,7 @@
 
 			local items = holder.items
 			local column = setmetatable(items, library):column() 
-			window.esp_section = column:section({name = disable_esp_preview and "ESP Preview (Disabled)" or ""})
+			window.esp_section = column:section({name = disable_esp_preview and "[Disabled cuz buggy]" or ""})
 
 			if disable_esp_preview then
     			holder.items.sgui.Enabled = false
