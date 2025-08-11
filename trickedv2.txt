@@ -1815,6 +1815,7 @@
 					image = "rbxassetid://107070078834415",
 				})  
 				
+				holder.items.sgui.Enabled = false
 				local items = holder.items
 
 				local column = setmetatable(items, library):column() 
