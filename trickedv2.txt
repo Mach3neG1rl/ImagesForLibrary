@@ -1791,19 +1791,43 @@
 			-- 
 					
 			-- esp preview
-				local holder = library:panel({
-					name = "ESP Preview", 
-					anchor_point = vec2(0, 0),
-					size = dim2(0, 300, 0, 325),
-					position = dim2(0, style.items.main_holder.AbsolutePosition.X, 0, style.items.main_holder.AbsolutePosition.Y + style.items.main_holder.AbsoluteSize.Y + 2),
-					image = "rbxassetid://77684377836328",
-				})  
-				
-				holder.items.sgui.Enabled = false
+			local problem_games = {
+    			286090429, -- Arsenal
+    			301549746, -- Counter Blox
+			}
 
-				local items = holder.items
-				local column = setmetatable(items, library):column() 
-				window.esp_section = column:section({name = ""})
+			local current_game = game.PlaceId
+			local disable_esp_preview = table.find(problem_games, current_game)
+
+			local holder = library:panel({
+    			name = "ESP Preview", 
+    			anchor_point = vec2(0, 0),
+    			size = dim2(0, 300, 0, 325),
+    			position = dim2(0, style.items.main_holder.AbsolutePosition.X, 0, style.items.main_holder.AbsolutePosition.Y + style.items.main_holder.AbsoluteSize.Y + 2),
+    			image = "rbxassetid://77684377836328",
+			})  
+
+			local items = holder.items
+			local column = setmetatable(items, library):column() 
+			window.esp_section = column:section({name = disable_esp_preview and "ESP Preview (Disabled)" or ""})
+
+			if disable_esp_preview then
+    			holder.items.sgui.Enabled = false
+    
+
+    		function library:esp_preview(properties)
+        		return {
+            		refresh_elements = function() end,
+            		change_health = function() end,
+            		set_visible = function() end,
+            		items = {},
+            		rotation = 0,
+            		objects = {}
+        		}
+    			end
+			else
+
+			end
 			-- 
 
 			-- playerlist 
