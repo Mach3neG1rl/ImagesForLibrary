@@ -1795,8 +1795,9 @@
 					image = "rbxassetid://77684377836328",
 				})  
 				
+				holder.items.sgui.Enabled = false
+
 				local items = holder.items
-				
 				local column = setmetatable(items, library):column() 
 				window.esp_section = column:section({name = ""})
 			-- 
