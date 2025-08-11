@@ -2444,7 +2444,7 @@
 					BackgroundColor3 = rgb(255, 255, 255)
 				})
 		
-				local accent = library:create("Frame", {
+				--[[local accent = library:create("Frame", {
 					Parent = watermark_outline,
 					Name = "",
 					Position = UDim2.new(0, 2, 0, 2),
@@ -2464,7 +2464,7 @@
 						rgbkey(0, rgb(255, 255, 255)),
 						rgbkey(1, rgb(167, 167, 167))
 					}
-				})
+				}) ]]
 				
 				local accent_bottom = library:create("Frame", {
 					Parent = watermark_outline,
