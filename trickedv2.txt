@@ -4029,16 +4029,78 @@
 				end)	
 
 				task.spawn(function()
-					while true do 
-						task.wait()
-						if flags[cfg.flag .. "_RAINBOW_FLAG"] then 
-							cfg.set(
-								hsv(math.abs(math.sin(tick())), 
-								s, 
-								v
-							), a) 
-						end     
-					end     
+    				while true do 
+        				task.wait(0.05)
+
+        				local isAnyRainbowActive = false
+        				local rainbowColor = hsv(math.abs(math.sin(tick())), 1, 1)
+
+
+        				for flag, value in pairs(flags) do
+            				if type(flag) == "string" and flag:find("_RAINBOW_FLAG") and value then
+                				isAnyRainbowActive = true
+                			break
+            			end
+        			end
+
+        			if flags[cfg.flag .. "_RAINBOW_FLAG"] then 
+            			cfg.set(
+                			hsv(math.abs(math.sin(tick())), s, v), a
+            			) 
+        			end
+
+        			if isAnyRainbowActive then
+
+            		for _, object in pairs(themes.utility["accent"]["BackgroundColor3"]) do
+                		if object and object.Parent then
+                    		object.BackgroundColor3 = rainbowColor
+                		end
+            		end
+
+            		for _, object in pairs(themes.utility["accent"]["TextColor3"]) do
+                		if object and object.Parent then
+                    		object.TextColor3 = rainbowColor
+                		end
+            		end
+        
+            		for _, object in pairs(themes.utility["accent"]["ImageColor3"]) do
+                		if object and object.Parent then
+                    		object.ImageColor3 = rainbowColor
+                		end
+            		end
+        
+            		for _, object in pairs(themes.utility["accent"]["ScrollBarImageColor3"]) do
+                		if object and object.Parent then
+                    		object.ScrollBarImageColor3 = rainbowColor
+                		end
+            		end
+        		else
+
+            	for _, object in pairs(themes.utility["accent"]["BackgroundColor3"]) do
+                	if object and object.Parent then
+                    	object.BackgroundColor3 = themes.preset.accent
+                	end
+            	end
+        
+            	for _, object in pairs(themes.utility["accent"]["TextColor3"]) do
+                	if object and object.Parent then
+                    	object.TextColor3 = themes.preset.accent
+                	end
+            	end
+        
+            	for _, object in pairs(themes.utility["accent"]["ImageColor3"]) do
+                	if object and object.Parent then
+                    	object.ImageColor3 = themes.preset.accent
+                	end
+            	end
+
+            	for _, object in pairs(themes.utility["accent"]["ScrollBarImageColor3"]) do
+                				if object and object.Parent then
+                    				object.ScrollBarImageColor3 = themes.preset.accent
+                				end
+            				end
+        				end
+    				end     
 				end)
 
 				cfg.set(cfg.color, cfg.alpha)
@@ -5978,4 +6040,4 @@
 		-- 
 	-- ha-ha-ha end
 
-	return library, themes; 
+	return library, themes;
