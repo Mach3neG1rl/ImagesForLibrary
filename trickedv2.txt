@@ -1632,11 +1632,11 @@
 
 				style.items.sgui.Enabled = false
 
-				local watermark = library:watermark({default = os.date('Tricked | $DATE | $TIME | FPS: $FPS | Ping: $PING')})  
+				local watermark = library:watermark({default = os.date('Tricked | %B %d, %Y | Time: %H:%M:%S')})  
 
 				task.spawn(function()
 					while task.wait(1) do 
-						watermark.change_text(os.date('Tricked | $DATE | $TIME | FPS: $FPS | Ping: $PING'))
+						watermark.change_text(os.date('Tricked | %B %d, %Y | Time: %H:%M:%S'))
 					end 
 				end) 
 
@@ -1854,49 +1854,9 @@
 		end
 
 		function library:watermark(options) 
-    		local cfg = {
-        		default = options.text or options.default or 'Tricked | $DATE | $TIME | FPS: $FPS | Ping: $PING',
-        		show_fps = options.show_fps or true,
-        		show_ping = options.show_ping or true,
-        		update_interval = options.update_interval or 0.15
-    		}
-
-			local temp = tick()
-    		local lastUpdate = 0
-    		local shared = {fps = 0, ping = "N/A"}
-
-    		library:connection(run.RenderStepped, function()
-        		local now = tick()
-
-        		if cfg.show_fps then
-            		shared.fps = math.floor(1 / (now - temp))
-            		temp = now
-        		end
-
-        		if (now - lastUpdate) > cfg.update_interval then
-            		if cfg.show_ping then
-                		local pingItem = stats.Network:FindFirstChild("ServerStatsItem")
-                			if pingItem and pingItem:FindFirstChild("Data Ping") then
-                    			shared.ping = tostring(math.round(pingItem["Data Ping"]:GetValue()))
-                			else
-                   				shared.ping = "N/A"
-                			end
-            			end
-
-            			local watermarkText = cfg.default
-                			:gsub("$PING", shared.ping)
-                			:gsub("$FPS", shared.fps)
-                			:gsub("$TIME", os.date("%H:%M:%S"))
-                			:gsub("$DATE", os.date("%B %d, %Y"))
-            
-            			text.Text = "  " .. watermarkText .. "  "
-        
-            			lastUpdate = now
-        			end
-    			end)
-
-    			return cfg
-			end
+			local cfg = {
+				default = options.text or options.default or os.date('Tricked | %B %d, %Y | Time: %H:%M:%S')
+			}
 
 			local watermark_outline = library:create("Frame", {
 				Parent = sgui,
