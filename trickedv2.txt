@@ -5396,8 +5396,13 @@
 
 		function library:button(options)
 			local cfg = {
-				callback = options.callback or function() end, 
-				name = options.text or options.name or "Button",
+        		callback = options.callback or function() end, 
+        		name = options.text or options.name or "Button",
+        		confirm = options.confirm or false,
+        		confirm_text = options.confirm_text or "Confirm?",
+        
+        		awaiting_confirm = false,
+        		original_name = options.text or options.name or "Button"
 			}   
 
 			local button = library:create("TextButton", {
@@ -5499,12 +5504,31 @@
 				LineJoinMode = Enum.LineJoinMode.Miter
 			})
 
-			button.MouseButton1Click:Connect(function()
-				cfg.callback() 
-			end)
-
-			return setmetatable(cfg, library)
-		end 
+    		button.MouseButton1Click:Connect(function()
+        		if cfg.confirm then
+            		if not cfg.awaiting_confirm then
+                	cfg.awaiting_confirm = true
+                	text.Text = cfg.confirm_text
+                
+                	task.spawn(function()
+                    	task.wait(3)
+                    		if cfg.awaiting_confirm then
+                        	cfg.awaiting_confirm = false
+                        	text.Text = cfg.original_name
+                    	end
+                	end)
+            	else
+                	cfg.awaiting_confirm = false
+                	text.Text = cfg.original_name
+                	cfg.callback()
+            	end
+        	else
+            	cfg.callback()
+        	end
+    	end)
+		
+    		return setmetatable(cfg, library)
+		end
 
 		function library:label(options)
 			local cfg = {name = options.text or options.name or "Label"}
