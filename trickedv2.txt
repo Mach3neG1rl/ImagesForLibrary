@@ -3645,12 +3645,20 @@
 				local section = setmetatable(cfg, library)
 				section:button_holder({})
 				section:button({name = "Copy", callback = function()
-					library.copied_flag = flags[cfg.flag]
-					library.is_rainbow = cfg.flag .. "_RAINBOW_FLAG"
+    			library.copied_flag = {
+        			Color = cfg.color,
+        			Transparency = cfg.alpha,
+        			Rainbow = flags[cfg.flag .. "_RAINBOW_FLAG"] 
+    				}
 				end})
+
 				section:button({name = "Paste", callback = function()
-					RainbowToggle.set(library.is_rainbow)
-					cfg.set(library.copied_flag.Color, library.copied_flag.Transparency)
+    				if library.copied_flag then
+        				if library.copied_flag.Rainbow then
+            				RainbowToggle.set(true)
+        				end
+        				cfg.set(library.copied_flag.Color, library.copied_flag.Transparency)
+    				end
 				end})
 
 				local main_holder_inline = library:create("Frame", {
