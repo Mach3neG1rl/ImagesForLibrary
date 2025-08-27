@@ -362,14 +362,14 @@
 					if library.current_element_open then 
 						library.current_element_open.set_visible(false)
 						library.current_element_open.open = false 
-						library.current_element_open = nil 
-					end 
+                		library.current_element_open = nil 
+            		end 
 
 					if frame.Parent:IsA("ScreenGui") and frame.Parent.DisplayOrder ~= 999999 then 
-						library.display_orders += 1 -- shit code, doll - yea ofc
+						library.display_orders += 1
 						frame.Parent.DisplayOrder = library.display_orders
-					end   
-					
+					end
+
 					connection = run.Heartbeat:Connect(function()
 						if dragging then
 							local current_time = tick()
@@ -380,16 +380,16 @@
 
 								local delta_x = mouse_pos.X - start_mouse.X
                         		local delta_y = mouse_pos.Y - start_mouse.Y
-                        
-                        		local new_x = math.clamp(
+								
+								local new_x = math.clamp(
 									start_pos.X.Offset + delta_x,
                             		0,
                             		viewport_size.X - frame.Size.X.Offset
                         		)
 								local new_y = math.clamp(
 									start_pos.Y.Offset + delta_y,
-                            		0,
-                            		viewport_size.Y - frame.Size.Y.Offset
+									0,
+									viewport_size.Y - frame.Size.Y.Offset
 								)
 
 								frame.Position = UDim2.new(0, new_x, 0, new_y)
@@ -402,9 +402,9 @@
 			library:connection(uis.InputEnded, function(input)
 				if input.UserInputType == Enum.UserInputType.MouseButton1 and dragging then
 					dragging = false
-					if connection then
+            		if connection then
 						connection:Disconnect()
-                		connection = nil	
+                		connection = nil    
 					end
 				end
 			end)
@@ -412,34 +412,14 @@
 			frame.InputEnded:Connect(function(input)
 				if input.UserInputType == Enum.UserInputType.MouseButton1 then
 					dragging = false
-				end
-			end)
-
-			library:connection(uis.InputChanged, function(input, game_event) 
-				if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
-					local viewport_x = camera.ViewportSize.X
-					local viewport_y = camera.ViewportSize.Y
-
-					local current_position = dim2(
-						0,
-						clamp(
-							start_size.X.Offset + (input.Position.X - start.X),
-							0,
-							viewport_x - frame.Size.X.Offset
-						),
-						0,
-						clamp(
-							start_size.Y.Offset + (input.Position.Y - start.Y),
-							0,
-							viewport_y - frame.Size.Y.Offset
-						)
-					)
-
-					frame.Position = current_position
+            		if connection then
+						connection:Disconnect()
+                		connection = nil
+					end
 				end
 			end)
 		end
-
+		--
 		function library:new_drawing(class, properties)
 			local ins = Drawing.new(class)
 
