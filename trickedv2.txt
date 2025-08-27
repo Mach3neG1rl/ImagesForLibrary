@@ -342,14 +342,22 @@
 
 		function library:draggify(frame)
 			local dragging = false 
-			local start_size = frame.Position
-			local start 
+    		local start_pos
+    		local start_mouse
+    		local connection
+    		local last_update = 0
+    		local update_interval = 1/120
+    		local viewport_size = camera.ViewportSize
+
+			camera:GetPropertyChangedSignal("ViewportSize"):Connect(function()
+				viewport_size = camera.ViewportSize
+			end)
 
 			frame.InputBegan:Connect(function(input)
 				if input.UserInputType == Enum.UserInputType.MouseButton1 then
 					dragging = true
-					start = input.Position
-					start_size = frame.Position
+					start_pos = frame.Position
+            		start_mouse = input.Position
 
 					if library.current_element_open then 
 						library.current_element_open.set_visible(false)
@@ -358,9 +366,46 @@
 					end 
 
 					if frame.Parent:IsA("ScreenGui") and frame.Parent.DisplayOrder ~= 999999 then 
-						library.display_orders += 1 -- shit code
+						library.display_orders += 1 -- shit code, doll - yea ofc
 						frame.Parent.DisplayOrder = library.display_orders
 					end   
+					
+					connection = run.Heartbeat:Connect(function()
+						if dragging then
+							local current_time = tick()
+							if current_time - last_update >= update_interval then
+								last_update = current_time
+
+								local mouse_pos = uis:GetMouseLocation()
+
+								local delta_x = mouse_pos.X - start_mouse.X
+                        		local delta_y = mouse_pos.Y - start_mouse.Y
+                        
+                        		local new_x = math.clamp(
+									start_pos.X.Offset + delta_x,
+                            		0,
+                            		viewport_size.X - frame.Size.X.Offset
+                        		)
+								local new_y = math.clamp(
+									start_pos.Y.Offset + delta_y,
+                            		0,
+                            		viewport_size.Y - frame.Size.Y.Offset
+								)
+
+								frame.Position = UDim2.new(0, new_x, 0, new_y)
+							end
+						end
+					end)
+				end
+			end)
+
+			library:connection(uis.InputEnded, function(input)
+				if input.UserInputType == Enum.UserInputType.MouseButton1 and dragging then
+					dragging = false
+					if connection then
+						connection:Disconnect()
+                		connection = nil	
+					end
 				end
 			end)
 
@@ -3039,6 +3084,9 @@
 				intervals = options.interval or options.decimal or 1,
 				default = options.default or 10,
 
+				min_text = options.min_text or nil,
+				max_text = options.max_text or nil
+
 				dragging = false,
 				value = options.default or 10, 
 			} 
@@ -3211,6 +3259,25 @@
 					Name = "_",
 					SortOrder = Enum.SortOrder.LayoutOrder
 				})
+
+			local function get_display_text(value)
+				if cfg.min_text and value == cfg.min then
+					return cfg.min_text
+				end
+
+				if cfg.max_text and value == cfg.max then 
+					return cfg.max_text
+				end
+
+				return tostring(value) .. cfg.suffix 
+			end
+
+			local function get_max_display_text()
+				if cfg.max_text then
+					return cfg.max_text
+				end
+				return tostring(cfg.max) .. cfg.suffix
+			end	
 			--  
 
 			function cfg.set(value)
@@ -3221,8 +3288,12 @@
 				cfg.value = math.clamp(library:round(value, cfg.intervals), cfg.min, cfg.max)
 
 				fill.Size = dim2((cfg.value - cfg.min) / (cfg.max - cfg.min), 0, 1, 0)
-				slidertext.Text = tostring(cfg.value) .. cfg.suffix
-				flags[cfg.flag] = cfg.value
+
+				local current_text = get_display_text(cfg.value)
+        		local max_text = get_max_display_text()
+        		slidertext.Text = current_text .. "/" .. max_text
+
+				flags[cfg.flag] = cfg.value 
 
 				cfg.callback(flags[cfg.flag])
 			end
