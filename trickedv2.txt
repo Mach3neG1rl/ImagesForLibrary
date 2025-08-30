@@ -79,7 +79,6 @@
 		connections = {},   
 		notifications = {},
 		playerlist_data = {},
-		spectators = {},
 
 		current_tab, 
 		current_element_open, 
@@ -100,7 +99,6 @@
 
 	local flags = library.flags
 	local config_flags = library.config_flags
-	local spectators = library.spectators
 
 	local themes = {
 		preset = {
@@ -1523,165 +1521,7 @@
 					PaddingBottom = dim(0, 4),
 					PaddingLeft = dim(0, 5)
 				})
-			--
-			-- spectator list
-
-			local spectator_outline = library:create("Frame", {
-    			Parent = sgui,
-    			Name = "",
-    			Visible = false, 
-    			Active = true,
-    			Position = dim2(0, 250, 0, 200),
-    			BorderColor3 = rgb(0, 0, 0),
-    			Size = dim2(0, 200, 0, 25),
-    			BorderSizePixel = 0,
-    			BackgroundColor3 = themes.preset.outline
-			})
-
-			library:apply_theme(spectator_outline, "outline", "BackgroundColor3")
-			library:draggify(spectator_outline)
-			library:make_resizable(spectator_outline)
-			library.spectator_list_frame = spectator_outline
-
-			local inline = library:create("Frame", {
-    			Parent = spectator_outline,
-    			Name = "",
-    			Position = dim2(0, 1, 0, 1),
-    			BorderColor3 = rgb(0, 0, 0),
-    			Size = dim2(1, -2, 1, -2),
-    			BorderSizePixel = 0,
-    			BackgroundColor3 = themes.preset.inline
-			})
-
-			library:apply_theme(inline, "inline", "BackgroundColor3")
-
-			local background = library:create("Frame", {
-    			Parent = inline,
-    			Name = "",
-    			Position = dim2(0, 1, 0, 1),
-    			BorderColor3 = rgb(0, 0, 0),
-    			Size = dim2(1, -2, 1, -2),
-    			BorderSizePixel = 0,
-    			BackgroundColor3 = rgb(255, 255, 255)
-			})
-
-			local UIGradient = library:create("UIGradient", {
-    			Parent = background,
-    			Name = "",
-    			Rotation = 90,
-    			Color = rgbseq{
-        			rgbkey(0, themes.preset.high_contrast),
-        			rgbkey(1, themes.preset.low_contrast)
-    			}
-			})
-
-			library:apply_theme(UIGradient, "contrast", "Color")
-
-			local bg = library:create("Frame", {
-    			Parent = background,
-    			Name = "a",
-    			BorderColor3 = rgb(0, 0, 0),
-    			Size = dim2(1, 0, 0, 2),
-    			BorderSizePixel = 0,
-    			BackgroundColor3 = themes.preset.accent
-			}) 
-
-			library:apply_theme(bg, "accent", "BackgroundColor3")
-
-			library:create("UIGradient", {
-    			Parent = bg,
-    			Name = "",
-    			Enabled = true, 
-    			Rotation = 90,
-    			Color = rgbseq{
-        			rgbkey(0, rgb(255, 255, 255)),
-        			rgbkey(1, rgb(167, 167, 167))
-    			}
-			})
-
-			local text = library:create("TextLabel", {
-    			Parent = background,
-    			Name = "",
-    			FontFace = library.font,
-    			TextColor3 = themes.preset.text,
-    			BorderColor3 = rgb(0, 0, 0),
-    			Text = "Spectators",
-    			BackgroundTransparency = 1,
-    			TextTruncate = Enum.TextTruncate.AtEnd,
-    			Size = dim2(1, 0, 1, 0),
-    			BorderSizePixel = 0,
-    			TextSize = 12,
-    			BackgroundColor3 = themes.preset.text
-			}, "text")
-
-			local UIStroke = library:create("UIStroke", {
-    			Parent = text,
-    			Name = "",
-    			LineJoinMode = Enum.LineJoinMode.Miter
-			})
-
-			local text_holder = library:create("Frame", {
-    			Parent = background,
-    			Name = "",
-    			Position = dim2(0, -2, 1, 1),
-    			Size = dim2(1, 4, 0, 0),
-    			BorderColor3 = rgb(0, 0, 0),
-    			BorderSizePixel = 0,
-    			AutomaticSize = Enum.AutomaticSize.Y,
-    			BackgroundColor3 = themes.preset.outline
-			})
-
-			library:apply_theme(text_holder, "outline", "BackgroundColor3")
-
-			local inline = library:create("Frame", {
-    			Parent = text_holder,
-    			Name = "",
-    			Size = dim2(1, -2, 1, -2),
-    			Position = dim2(0, 1, 0, 1),
-    			BorderColor3 = rgb(0, 0, 0),
-    			BorderSizePixel = 0,
-    			BackgroundColor3 = themes.preset.inline
-			})
-
-			library:apply_theme(inline, "inline", "BackgroundColor3")
-
-			local spectator_container = library:create("Frame", {
-    			Parent = inline,
-    			Name = "",
-    			Size = dim2(1, -2, 1, -2),
-    			Position = dim2(0, 1, 0, 1),
-    			BorderColor3 = rgb(0, 0, 0),
-    			BorderSizePixel = 0,
-    			BackgroundColor3 = rgb(255, 255, 255)
-			})
-
-			library.spectator_container = spectator_container
-
-			local UIGradient = library:create("UIGradient", {
-    			Parent = spectator_container,
-    			Name = "",
-    			Rotation = 90,
-    			Color = rgbseq{
-        			rgbkey(0, themes.preset.high_contrast),
-        			rgbkey(1, themes.preset.low_contrast)
-    			}
-			})
-
-			library:apply_theme(UIGradient, "contrast", "Color")
-
-			library:create("UIListLayout", {
-    			Parent = spectator_container,
-    			Name = "",
-    			Padding = dim(0, -1),
-    			SortOrder = Enum.SortOrder.LayoutOrder
-			})
-
-			library:create("UIPadding", {
-    			Parent = spectator_container,
-    			Name = "",
-    			PaddingBottom = dim(0, 4),
-    			PaddingLeft = dim(0, 5)
-			})
+			--  
 
 			-- main window
 				local main_window = library:panel({
@@ -1859,9 +1699,6 @@
 				end})
 				section:toggle({name = "Watermark", flag = "watermark", default = true, callback = function(bool)
 					watermark.set_visible(bool)
-				end})
-				section:toggle({name = "Spectator List", flag = "spectator_list", default = true, callback = function(bool)
-    				library.spectator_list_frame.Visible = bool
 				end})
 				section:button_holder({})
 				section:button({name = "Copy JobId", callback = function()
@@ -4249,7 +4086,7 @@
 			local parent = self.right_holder
 
 			local cfg = {
-				flag = options.flag or "Stfu!!!!",
+				flag = options.flag or "SET ME A FLAG NOWWW!!!!",
 				callback = options.callback or function() end,
 				open = false,
 				binding = nil, 
@@ -5814,7 +5651,6 @@
 		function library:playerlist(options) 
 			local cfg = {
 				callback = options.callback or function() end, 
-				spectators = {},
 
 				labels = {
 					name,
