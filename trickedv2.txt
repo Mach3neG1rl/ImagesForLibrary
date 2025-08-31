@@ -516,6 +516,7 @@
             	0, config["KeybindListSize"].Y
 			)
 		end
+	end
 		
 		function library:round(number, float) 
 			local multiplier = 1 / (float or 1)
