@@ -5849,7 +5849,7 @@
 					Parent = TextButton,
 					Name = "",
 					FontFace = library.font,
-					TextColor3 = tostring(player) ~= lp.Name and themes.preset.text or rgb(0, 0, 255),
+					TextColor3 = tostring(player) ~= lp.Name and themes.preset.text or rgb(128, 128, 255),
 					BorderColor3 = rgb(0, 0, 0),
 					Text = tostring(player) ~= lp.Name and "Neutral" or "LocalPlayer",
 					BackgroundTransparency = 1,
