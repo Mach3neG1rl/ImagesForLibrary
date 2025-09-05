@@ -1975,49 +1975,76 @@
     		if not character then
         		local success, result = pcall(function()
             		local insertService = game:GetService("InsertService")
-            		character = insertService:LoadAsset(90362015940440):GetChildren()[1]
-            		print("Loaded InfernoT character from asset ID")
+            		return insertService:LoadAsset(90362015940440):GetChildren()[1]
         		end)
-
-        		if not success or not character then
-            		lp.Character.Archivable = true
-            		character = lp.Character:Clone()
-            		print("Using local player character as fallback")
+        
+        		if success and result then
+            		character = result
+            		print("Loaded InfernoT character from asset ID")
         		end
     		end
 
-			local items = cfg.items; do 
-				items.viewportframe = library:create( "ViewportFrame" , {
-					Parent = self.holder;
-					BackgroundTransparency = 1;
-					Size = dim2(1, 0, 0, 220);
-					BorderColor3 = rgb(0, 0, 0);
-					ZIndex = 1;
-					Position = dim2(0, 0, 0, 10);
-					BorderSizePixel = 0;
-					BackgroundColor3 = rgb(255, 255, 255)
-				});
-				
-				items.camera = library:create( "Camera" , {
-					FieldOfView = 70.00022888183594;
-					CameraType = Enum.CameraType.Track;
-					Focus = cfr(0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1); -- bro wtf is this serializer doing
-					CFrame = cfr(0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1);
-					Parent = ws;
-					Name = "\0"
-				}); 
+    		if not character and lp.Character then
+        		lp.Character.Archivable = true
+        		character = lp.Character:Clone()
+        		print("Using local player character as fallback")
+    		end
 
-				items.viewportframe.CurrentCamera = items.camera -- sick
-				character.Parent = items.viewportframe
+    		if character and not character.PrimaryPart then
+        		local humanoidRootPart = character:FindFirstChild("HumanoidRootPart") or 
+                                		character:FindFirstChild("Torso") or 
+                                		character:FindFirstChild("UpperTorso")
+        		if humanoidRootPart then
+            		character.PrimaryPart = humanoidRootPart
+        		end
+    		end
 
-				items.camera.CameraSubject = character
+    		if not character or not character.PrimaryPart then
+        		warn("Failed to load character for ESP Preview")
+        		return setmetatable(cfg, library)
+    		end
 
-				library:connection(run.RenderStepped, function()
-					task.wait()
-					cfg.rotation += 0.5
-					character:SetPrimaryPartCFrame(cfr(Vector3.new(0, 1, -6)) * angle(0, math.rad(cfg.rotation), 0))
-				end)
-			end 
+    		local items = cfg.items
+    
+    		items.viewportframe = library:create("ViewportFrame", {
+        		Parent = self.holder,
+        		BackgroundTransparency = 1,
+        		Size = dim2(1, 0, 0, 220),
+        		BorderColor3 = rgb(0, 0, 0),
+        		ZIndex = 1,
+        		Position = dim2(0, 0, 0, 10),
+        		BorderSizePixel = 0,
+        		BackgroundColor3 = rgb(255, 255, 255)
+    		})
+    
+    		items.camera = library:create("Camera", {
+        		FieldOfView = 70,
+        		CameraType = Enum.CameraType.Scriptable,
+        		Parent = items.viewportframe
+    		})
+
+    		items.viewportframe.CurrentCamera = items.camera
+
+    		character:SetPrimaryPartCFrame(CFrame.new(0, 0, -6))
+    		character.Parent = items.viewportframe
+
+    		local distance = 8
+    		local height = 2
+    
+    		library:connection(run.RenderStepped, function(dt)
+        		if character and character.PrimaryPart then
+            		cfg.rotation = cfg.rotation + (dt * 45)
+            
+            		local focusPoint = character.PrimaryPart.Position + Vector3.new(0, height, 0)
+            		local cameraPosition = focusPoint + Vector3.new(
+                		math.sin(math.rad(cfg.rotation)) * distance,
+                		0,
+                		math.cos(math.rad(cfg.rotation)) * distance
+            		)
+            
+            		items.camera.CFrame = CFrame.lookAt(cameraPosition, focusPoint)
+        		end
+    		end)
 
 			local objects = cfg.objects; do 
 				objects[ "holder" ] = library:create( "Frame" , {
