@@ -1788,7 +1788,48 @@
 
 						blur:Destroy()
 					end})
+			-- 
 					
+			-- esp preview
+			local problem_games = {
+    			286090429, -- Arsenal
+    			301549746, -- Counter Blox
+			}
+
+			local current_game = game.PlaceId
+			local disable_esp_preview = table.find(problem_games, current_game)
+
+			local holder = library:panel({
+    			name = "ESP Preview", 
+    			anchor_point = vec2(0, 0),
+    			size = dim2(0, 300, 0, 325),
+    			position = dim2(0, style.items.main_holder.AbsolutePosition.X, 0, style.items.main_holder.AbsolutePosition.Y + style.items.main_holder.AbsoluteSize.Y + 2),
+    			image = "rbxassetid://77684377836328",
+			})  
+
+			local items = holder.items
+			local column = setmetatable(items, library):column() 
+			window.esp_section = column:section({name = disable_esp_preview and "[Disabled cuz buggy]" or ""})
+
+			if disable_esp_preview then
+    			holder.items.sgui.Enabled = false
+    
+
+    		function library:esp_preview(properties)
+        		return {
+            		refresh_elements = function() end,
+            		change_health = function() end,
+            		set_visible = function() end,
+            		items = {},
+            		rotation = 0,
+            		objects = {}
+        		}
+    			end
+			else
+
+			end
+			-- 
+
 			-- playerlist 
 				local holder = library:panel({
 					name = "Playerlist", 
@@ -1921,89 +1962,42 @@
 		function library:esp_preview(properties)
 			local cfg = {items = {}, rotation = 0; objects = {};}
 
-			local character
-    		local sp1_path = rs:FindFirstChild("CharacterModels")
-    		if sp1_path then
-        		sp1_path = sp1_path:FindFirstChild("SP1")
-        		if sp1_path then
-            		character = sp1_path:Clone()
-            		print("Loaded SP1 character from ReplicatedStorage")
-        		end
-    		end
+			lp.Character.Archivable = true
+			local character = lp.Character:Clone()
+			character.Animate:Destroy()
 
-    		if not character then
-        		local success, result = pcall(function()
-            		local insertService = game:GetService("InsertService")
-            		return insertService:LoadAsset(90362015940440):GetChildren()[1]
-        		end)
-        
-        		if success and result then
-            		character = result
-            		print("Loaded InfernoT character from asset ID")
-        		end
-    		end
+			local items = cfg.items; do 
+				items.viewportframe = library:create( "ViewportFrame" , {
+					Parent = self.holder;
+					BackgroundTransparency = 1;
+					Size = dim2(1, 0, 0, 220);
+					BorderColor3 = rgb(0, 0, 0);
+					ZIndex = 1;
+					Position = dim2(0, 0, 0, 10);
+					BorderSizePixel = 0;
+					BackgroundColor3 = rgb(255, 255, 255)
+				});
+				
+				items.camera = library:create( "Camera" , {
+					FieldOfView = 70.00022888183594;
+					CameraType = Enum.CameraType.Track;
+					Focus = cfr(0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1); -- bro wtf is this serializer doing
+					CFrame = cfr(0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1);
+					Parent = ws;
+					Name = "\0"
+				}); 
 
-    		if not character and lp.Character then
-        		lp.Character.Archivable = true
-        		character = lp.Character:Clone()
-        		print("Using local player character as fallback")
-    		end
+				items.viewportframe.CurrentCamera = items.camera -- sick
+				character.Parent = items.viewportframe
 
-    		if character and not character.PrimaryPart then
-        		local humanoidRootPart = character:FindFirstChild("HumanoidRootPart") or 
-                                		character:FindFirstChild("Torso") or 
-                                		character:FindFirstChild("UpperTorso")
-        		if humanoidRootPart then
-            		character.PrimaryPart = humanoidRootPart
-        		end
-    		end
+				items.camera.CameraSubject = character
 
-    		if not character or not character.PrimaryPart then
-        		warn("Failed to load character for ESP Preview")
-        		return setmetatable(cfg, library)
-    		end
-
-    		local items = cfg.items
-    
-    		items.viewportframe = library:create("ViewportFrame", {
-        		Parent = self.holder,
-        		BackgroundTransparency = 1,
-        		Size = dim2(1, 0, 0, 220),
-        		BorderColor3 = rgb(0, 0, 0),
-        		ZIndex = 1,
-        		Position = dim2(0, 0, 0, 10),
-        		BorderSizePixel = 0,
-        		BackgroundColor3 = rgb(255, 255, 255)
-    		})
-    
-    		items.camera = library:create("Camera", {
-        		FieldOfView = 70,
-        		CameraType = Enum.CameraType.Scriptable,
-        		Parent = items.viewportframe
-    		})
-
-    		items.viewportframe.CurrentCamera = items.camera
-
-    		character:SetPrimaryPartCFrame(CFrame.new(0, 0, -6))
-    		character.Parent = items.viewportframe
-
-    		local distance = 8
-    		local height = 2
-    
-    		library:connection(run.RenderStepped, function(dt)
-        		if character and character.PrimaryPart then
-            		cfg.rotation = cfg.rotation + (dt * 45)
-            
-            		local focusPoint = character.PrimaryPart.Position + Vector3.new(0, height, 0)
-            		local cameraPosition = focusPoint + Vector3.new(
-                		math.sin(math.rad(cfg.rotation)) * distance,
-                		0,
-                		math.cos(math.rad(cfg.rotation)) * distance
-            		)
-            
-            		items.camera.CFrame = CFrame.lookAt(cameraPosition, focusPoint)
-        		end
-    		end)
+				library:connection(run.RenderStepped, function()
+					task.wait()
+					cfg.rotation += 0.5
+					character:SetPrimaryPartCFrame(cfr(Vector3.new(0, 1, -6)) * angle(0, math.rad(cfg.rotation), 0))
+				end)
+			end 
 
 			local objects = cfg.objects; do 
 				objects[ "holder" ] = library:create( "Frame" , {
