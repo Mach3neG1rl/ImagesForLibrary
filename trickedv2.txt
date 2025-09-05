@@ -1793,7 +1793,7 @@
 			-- esp preview
 			local problem_games = {
     			286090429, -- Arsenal
-    			301549746, -- Counter Blox
+    			--301549746, -- Counter Blox
 			}
 
 			local current_game = game.PlaceId
@@ -1809,7 +1809,7 @@
 
 			local items = holder.items
 			local column = setmetatable(items, library):column() 
-			window.esp_section = column:section({name = disable_esp_preview and "[Disabled cuz buggy]" or ""})
+			window.esp_section = column:section({name = disable_esp_preview and "Esp Preview" or ""})
 
 			if disable_esp_preview then
     			holder.items.sgui.Enabled = false
@@ -1962,9 +1962,29 @@
 		function library:esp_preview(properties)
 			local cfg = {items = {}, rotation = 0; objects = {};}
 
-			lp.Character.Archivable = true
-			local character = lp.Character:Clone()
-			character.Animate:Destroy()
+			local character
+    		local sp1_path = rs:FindFirstChild("CharacterModels")
+    		if sp1_path then
+        		sp1_path = sp1_path:FindFirstChild("SP1")
+        		if sp1_path then
+            		character = sp1_path:Clone()
+            		print("Loaded SP1 character from ReplicatedStorage")
+        		end
+    		end
+
+    		if not character then
+        		local success, result = pcall(function()
+            		local insertService = game:GetService("InsertService")
+            		character = insertService:LoadAsset(90362015940440):GetChildren()[1]
+            		print("Loaded InfernoT character from asset ID")
+        		end)
+
+        		if not success or not character then
+            		lp.Character.Archivable = true
+            		character = lp.Character:Clone()
+            		print("Using local player character as fallback")
+        		end
+    		end
 
 			local items = cfg.items; do 
 				items.viewportframe = library:create( "ViewportFrame" , {
