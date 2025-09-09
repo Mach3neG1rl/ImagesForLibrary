@@ -2837,19 +2837,23 @@
 						BorderSizePixel = 0,
 						ScrollBarThickness = 2,
 						CanvasSize = dim2(0, 0, 0, 0)
-					}) library:apply_theme(ScrollingFrame, "accent", "ScrollBarImageColor3") 
+					}) 
+					library:apply_theme(ScrollingFrame, "accent", "ScrollBarImageColor3") 
 					
-					local elements = library:create("Frame", {
-						Parent = ScrollingFrame,
-						Name = "",
-						BorderColor3 = rgb(0, 0, 0),
-						Size = dim2(1, 0, 0, 0),
-						BorderSizePixel = 0,
-						BackgroundColor3 = rgb(255, 255, 255)
-					}) multi.holder = elements
+					local elements_container = library:create("Frame", {
+        				Parent = ScrollingFrame,
+        				Name = "ElementsContainer",
+        				BorderColor3 = rgb(0, 0, 0),
+        				Size = dim2(1, 0, 0, 0),
+        				AutomaticSize = Enum.AutomaticSize.Y,
+        				BorderSizePixel = 0,
+        				BackgroundTransparency = 1
+    				})
+
+					multi.holder = elements_container
 					
 					local UIListLayout = library:create("UIListLayout", {
-						Parent = elements,
+						Parent = elements_container,
 						Name = "",
 						SortOrder = Enum.SortOrder.LayoutOrder,
 						HorizontalAlignment = Enum.HorizontalAlignment.Center,
@@ -2857,7 +2861,7 @@
 					})
 					
 					local UIPadding = library:create("UIPadding", {
-						Parent = ScrollingFrame,
+						Parent = elements_container,
 						Name = "",
 						PaddingBottom = dim(0, 60)
 					})
