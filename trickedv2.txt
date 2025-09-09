@@ -2861,7 +2861,7 @@
 					})
 					
 					local UIPadding = library:create("UIPadding", {
-						Parent = ScrollingFrame,
+						Parent = elements_container,
 						Name = "",
 						PaddingBottom = dim(0, 60)
 					})
