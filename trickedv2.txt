@@ -1811,6 +1811,105 @@
 			local column = setmetatable(items, library):column() 
 			window.esp_section = column:section({name = disable_esp_preview and "[Disabled cuz buggy]" or ""})
 
+			local conditions_section_outline = library:create("Frame", {
+    Parent = column.holder,
+    Name = "conditions_section",
+    BorderColor3 = rgb(0, 0, 0),
+    Size = dim2(1, 0, 0, 70),
+    BorderSizePixel = 0,
+    BackgroundColor3 = themes.preset.inline
+})
+library:apply_theme(conditions_section_outline, "inline", "BackgroundColor3")
+
+local conditions_inline = library:create("Frame", {
+    Parent = conditions_section_outline,
+    Name = "inline",
+    Position = dim2(0, 1, 0, 1),
+    BorderColor3 = rgb(0, 0, 0),
+    Size = dim2(1, -2, 1, -2),
+    BorderSizePixel = 0,
+    BackgroundColor3 = themes.preset.outline
+})
+library:apply_theme(conditions_inline, "outline", "BackgroundColor3")
+
+local conditions_background = library:create("Frame", {
+    Parent = conditions_inline,
+    Name = "background",
+    Position = dim2(0, 1, 0, 1),
+    BorderColor3 = rgb(0, 0, 0),
+    Size = dim2(1, -2, 1, -2),
+    BorderSizePixel = 0,
+    BackgroundColor3 = rgb(255, 255, 255)
+})
+
+local conditions_title = library:create("TextLabel", {
+    Parent = conditions_background,
+    FontFace = library.font,
+    TextColor3 = themes.preset.text,
+    BorderColor3 = rgb(0, 0, 0),
+    Text = "Conditions",
+    Name = "title",
+    BackgroundTransparency = 1,
+    Position = dim2(0, 6, 0, 4),
+    BorderSizePixel = 0,
+    AutomaticSize = Enum.AutomaticSize.XY,
+    TextSize = 12,
+    BackgroundColor3 = rgb(255, 255, 255)
+})
+
+library:create("UIStroke", {
+    Parent = conditions_title,
+    LineJoinMode = Enum.LineJoinMode.Miter
+})
+
+local conditions_accent = library:create("Frame", {
+    Parent = conditions_background,
+    Name = "accent",
+    BorderColor3 = rgb(0, 0, 0),
+    Size = dim2(1, 0, 0, 2),
+    BorderSizePixel = 0,
+    BackgroundColor3 = themes.preset.accent
+})
+library:apply_theme(conditions_accent, "accent", "BackgroundColor3")
+
+local UIGradient = library:create("UIGradient", {
+    Parent = conditions_accent,
+    Rotation = 90,
+    Color = rgbseq {
+        rgbkey(0, rgb(255, 255, 255)),
+        rgbkey(1, rgb(167, 167, 167))
+    }
+})
+
+local UIGradient_bg = library:create("UIGradient", {
+    Parent = conditions_background,
+    Rotation = 90,
+    Color = rgbseq {
+        rgbkey(0, rgb(41, 41, 55)),
+        rgbkey(1, rgb(35, 35, 47))
+    }
+})
+library:apply_theme(UIGradient_bg, "contrast", "Color")
+
+local dropdown_container = library:create("Frame", {
+    Parent = conditions_background,
+    Name = "dropdown_container",
+    BackgroundTransparency = 1,
+    Position = dim2(0, 4, 0, 22),
+    Size = dim2(1, -8, 1, -26),
+    BorderSizePixel = 0
+})
+
+local temp_section = setmetatable({holder = dropdown_container}, library)
+
+
+temp_section:dropdown({
+    flag = "esp_preview_conditions",
+    items = {"Name", "Box", "Health Bar", "Health Text", "Tool", "Distance"},
+    multi = true,
+    scrolling = false,
+})
+
 			if disable_esp_preview then
     			holder.items.sgui.Enabled = false
     
