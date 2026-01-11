@@ -1978,6 +1978,97 @@
 					BackgroundColor3 = rgb(255, 255, 255)
 				});
 				
+				local conditions_section = library:create("Frame", {
+    Parent = items.viewportframe;
+    Name = "\\0";
+    AnchorPoint = vec2(0, 1);
+    Position = dim2(0, 0, 1, 0);
+    Size = dim2(1, 0, 0, 60); 
+    BorderSizePixel = 0;
+    BackgroundColor3 = themes.preset.inline
+});
+library:apply_theme(conditions_section, "inline", "BackgroundColor3");
+
+local inline = library:create("Frame", {
+    Parent = conditions_section;
+    Name = "\\0";
+    Position = dim2(0, 1, 0, 1);
+    Size = dim2(1, -2, 1, -2);
+    BorderSizePixel = 0;
+    BackgroundColor3 = themes.preset.outline
+});
+library:apply_theme(inline, "outline", "BackgroundColor3");
+
+local background = library:create("Frame", {
+    Parent = inline;
+    Name = "\\0";
+    Position = dim2(0, 1, 0, 1);
+    Size = dim2(1, -2, 1, -2);
+    BorderSizePixel = 0;
+    BackgroundColor3 = rgb(255, 255, 255)
+});
+
+local UIGradient = library:create("UIGradient", {
+    Parent = background;
+    Rotation = 90;
+    Color = rgbseq{
+        rgbkey(0, rgb(41, 41, 55)),
+        rgbkey(1, rgb(35, 35, 47))
+    }
+});
+library:apply_theme(UIGradient, "contrast", "Color");
+
+local title = library:create("TextLabel", {
+    Parent = background;
+    FontFace = library.font;
+    TextColor3 = themes.preset.text;
+    Text = "Conditions";
+    BackgroundTransparency = 1;
+    Position = dim2(0, 4, 0, 2);
+    Size = dim2(0, 0, 0, 12);
+    AutomaticSize = Enum.AutomaticSize.X;
+    TextSize = 12;
+    TextXAlignment = Enum.TextXAlignment.Left;
+});
+library:create("UIStroke", {
+    Parent = title;
+    LineJoinMode = Enum.LineJoinMode.Miter
+});
+
+local accent = library:create("Frame", {
+    Parent = background;
+    Size = dim2(1, 0, 0, 2);
+    BorderSizePixel = 0;
+    BackgroundColor3 = themes.preset.accent
+});
+library:apply_theme(accent, "accent", "BackgroundColor3");
+
+library:create("UIGradient", {
+    Parent = accent;
+    Rotation = 90;
+    Color = rgbseq{
+        rgbkey(0, rgb(255, 255, 255)),
+        rgbkey(1, rgb(167, 167, 167))
+    }
+});
+
+local elements_holder = library:create("Frame", {
+    Parent = background;
+    Position = dim2(0, 4, 0, 18);
+    Size = dim2(1, -8, 1, -22);
+    BackgroundTransparency = 1;
+});
+
+local section_meta = setmetatable({holder = elements_holder}, library);
+local conditions_dropdown = section_meta:dropdown({
+    items = {"None", "Visible", "Distance", "Health"},
+    default = "None",
+    flag = "esp_conditions",
+    callback = function(selected)
+        print("Selected condition:", selected)
+    end
+});
+
 				items.camera = library:create( "Camera" , {
 					FieldOfView = 70.00022888183594;
 					CameraType = Enum.CameraType.Track;
