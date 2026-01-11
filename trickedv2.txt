@@ -1811,8 +1811,6 @@
 			local column = setmetatable(items, library):column() 
 			window.esp_section = column:section({name = disable_esp_preview and "[Disabled cuz buggy]" or ""})
 
-			
-
 			if disable_esp_preview then
     			holder.items.sgui.Enabled = false
     
@@ -2000,110 +1998,6 @@
 					character:SetPrimaryPartCFrame(cfr(Vector3.new(0, 1, -6)) * angle(0, math.rad(cfg.rotation), 0))
 				end)
 			end 
-
-			local conditions_outline = library:create("Frame", {
-				Parent = self.holder,
-				Name = "conditions_section",
-            	BorderColor3 = rgb(0, 0, 0),
-            	Size = dim2(1, 0, 0, 85),
-            	Position = dim2(0, 0, 1, -85),
-            	BorderSizePixel = 0,
-            	BackgroundColor3 = themes.preset.inline
-       	 	})
-			library:apply_theme(conditions_outline, "inline", "BackgroundColor3")
-
-			local conditions_inline = library:create("Frame", {
-            	Parent = conditions_outline,
-           		Name = "\0",
-            	Position = dim2(0, 1, 0, 1),
-            	Size = dim2(1, -2, 1, -2),
-            	BorderSizePixel = 0,
-            	BackgroundColor3 = themes.preset.outline
-        	})
-        	library:apply_theme(conditions_inline, "outline", "BackgroundColor3")
-
-			local conditions_bg = library:create("Frame", {
-            	Parent = conditions_inline,
-            	Name = "\0",
-            	Position = dim2(0, 1, 0, 1),
-            	Size = dim2(1, -2, 1, -2),
-            	BorderSizePixel = 0,
-            	BackgroundColor3 = rgb(255, 255, 255)
-        	})
-
-			local gradient = library:create("UIGradient", {
-				Parent = conditions_bg,
-				Name = "\0",
-            	Rotation = 90,
-            	Color = rgbseq{
-                	rgbkey(0, rgb(41, 41, 55)),
-                	rgbkey(1, rgb(35, 35, 47))
-            	}
-        	})
-			library:apply_theme(gradient, "contrast", "Color")
-
-			local title = library:create("TextLabel", {
-            	Parent = conditions_bg,
-            	FontFace = library.font,
-           	 	TextColor3 = themes.preset.text,
-            	BorderColor3 = rgb(0, 0, 0),
-            	Text = "Conditions",
-            	Name = "\0",
-            	Size = dim2(1, 0, 0, 0),
-            	Position = dim2(0, 6, 0, 5),
-            	BackgroundTransparency = 1,
-            	TextXAlignment = Enum.TextXAlignment.Left,
-            	AutomaticSize = Enum.AutomaticSize.Y,
-            	TextSize = 12
-        	})
-
-			library:create("UIStroke", {
-            	Parent = title,
-            	Name = "\0",
-            	LineJoinMode = Enum.LineJoinMode.Miter
-        	})
-
-			local accent = library:create("Frame", {
-				Parent = conditions_bg,
-            	Name = "\0",
-            	Size = dim2(1, 0, 0, 2),
-            	BorderColor3 = rgb(0, 0, 0),
-            	BorderSizePixel = 0,
-            	BackgroundColor3 = themes.preset.accent
-        	})
-			library:apply_theme(accent, "accent", "BackgroundColor3")
-
-			library:create("UIGradient", {
-            	Parent = accent,
-           	 	Name = "\0",
-            	Rotation = 90,
-            	Color = rgbseq{
-                	rgbkey(0, rgb(255, 255, 255)),
-                	rgbkey(1, rgb(167, 167, 167))
-            	}
-        	})
-
-			local dropdown_holder = library:create("Frame", {
-            	Parent = conditions_bg,
-            	Name = "\0",
-            	BackgroundTransparency = 1,
-            	Position = dim2(0, 4, 0, 25),
-            	Size = dim2(1, -8, 1, -30),
-            	BorderSizePixel = 0
-        	})
-
-			local temp_section = setmetatable({holder = dropdown_holder}, library)
-
-			temp_section:dropdown({
-            	name = "",  -- БЕЗ НАЗВАНИЯ
-            	flag = "esp_preview_conditions",
-            	items = {"Name", "Box", "Health Bar", "Health Text", "Tool", "Distance"},
-            	multi = true,
-            	scrolling = false,
-            	callback = function(selected)
-                	print("Selected:", table.concat(selected, ", "))
-            	end
-        	})
 
 			local objects = cfg.objects; do 
 				objects[ "holder" ] = library:create( "Frame" , {
