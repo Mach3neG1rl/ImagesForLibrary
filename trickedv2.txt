@@ -1772,14 +1772,17 @@
     			library:notification({text = "Saved Config: " .. flags["config_name_list"], time = 3})
 			end})
 			options_section:button_holder({})
-			options_section:button({name = "Refresh Configs", callback = function()
+			options_section:button({name = "Auto Load", callback = function()
+			end})
+			options_section:button_holder({})
+			options_section:button({name = "Refresh", callback = function()
     			library:config_list_update()
 			end})
-
-			other_section:button_holder({})
-			other_section:button({name = "Unload Config", callback = function()
+			options_section:button_holder({})
+			options_section:button({name = "Unload", callback = function()
     			library:load_config(library.old_config)
 			end})
+			
 			other_section:button({name = "Unload Menu", callback = function()
     			library:load_config(library.old_config)
 
