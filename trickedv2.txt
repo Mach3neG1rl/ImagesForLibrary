@@ -2007,6 +2007,26 @@
 				end)
 			end 
 
+			 local dropdown_holder = library:create("Frame", {
+            Parent = items.viewportframe;
+            Name = "\0";
+            AnchorPoint = vec2(0, 1);
+            Position = dim2(0, 0, 1, -5);
+            Size = dim2(1, -10, 0, 20);
+            BackgroundTransparency = 1;
+            BorderSizePixel = 0;
+            ZIndex = 10;
+        });
+
+        local dropdown_section = setmetatable({holder = dropdown_holder}, library);
+
+        items.conditions_dropdown = dropdown_section:dropdown({
+            name = "Conditions",
+            items = {"None", "Visible", "Health", "Distance"},
+            default = "None",
+            flag = "esp_conditions_preview",
+        });
+
 			local objects = cfg.objects; do 
 				objects[ "holder" ] = library:create( "Frame" , {
 					Parent = items.viewportframe;
