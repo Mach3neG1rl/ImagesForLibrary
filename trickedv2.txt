@@ -2027,7 +2027,6 @@
 					print("Selected:", selected)
             	end
         	});
-    	end 
 
 			local objects = cfg.objects; do 
 				objects[ "holder" ] = library:create( "Frame" , {
