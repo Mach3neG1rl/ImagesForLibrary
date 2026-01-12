@@ -1783,6 +1783,7 @@
     			library:load_config(library.old_config)
 			end})
 			
+			other_section:button_holder({})
 			other_section:button({name = "Unload Menu", callback = function()
     			library:load_config(library.old_config)
 
