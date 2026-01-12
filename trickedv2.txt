@@ -1744,8 +1744,10 @@
 					library:load_config(readfile(library.directory .. "/configs/" .. name .. ".cfg"))
 				end 
 
-				local column = setmetatable(items, library):column() 
-				local section = column:section({name = "Options"})
+				local options_section, other_section = column:multi_section({
+    				names = {"Options", "Other"}
+				})
+				
 					config_holder = section:list({flag = "config_name_list"})
 					section:textbox({flag = "config_name_text_box"})
 					section:button_holder({})
