@@ -2007,27 +2007,30 @@
 				end)
 			end 
 
-			local dropdown_container = library:create("Frame", {
-				Parent = self.holder;
+			local dropdown_holder = library:create("Frame", {
+            	Parent = items.viewportframe; -- ВАЖНО: Parent это ViewportFrame!
             	Name = "\\0";
-            	Position = dim2(0, 0, 0, 175);
-            	Size = dim2(1, 0, 0, 50);
+            	AnchorPoint = vec2(0, 1); -- Якорь снизу
+            	Position = dim2(0, 0, 1, -5); -- Позиция внизу ViewportFrame
+            	Size = dim2(1, -10, 0, 20); -- Ширина полная минус отступы
             	BackgroundTransparency = 1;
             	BorderSizePixel = 0;
+            	ZIndex = 10; -- Высокий ZIndex чтобы был поверх
         	});
 
-			local dropdown_section = setmetatable({holder = dropdown_container}, library);
+			local dropdown_section = setmetatable({holder = dropdown_holder}, library);
 
-			local test_dropdown = dropdown_section:dropdown({
-				name = "Test Dropdown",
-            	items = {"Option 1", "Option 2", "Option 3"},
-            	default = "Option 1",
-            	flag = "esp_preview_test",
+			items.conditions_dropdown = dropdown_section:dropdown({
+            	name = "Conditions",
+            	items = {"None", "Visible", "Health", "Distance"},
+            	default = "None",
+            	flag = "esp_conditions_preview",
             	callback = function(selected)
-					print("Selected:", selected)
+                	print("ESP Condition:", selected)
             	end
         	});
-
+    	end 
+		
 			local objects = cfg.objects; do 
 				objects[ "holder" ] = library:create( "Frame" , {
 					Parent = items.viewportframe;
