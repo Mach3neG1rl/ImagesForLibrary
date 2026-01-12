@@ -2005,27 +2005,7 @@
 					cfg.rotation += 0.5
 					character:SetPrimaryPartCFrame(cfr(Vector3.new(0, 1, -6)) * angle(0, math.rad(cfg.rotation), 0))
 				end)
-			end 
-
-			 local dropdown_holder = library:create("Frame", {
-            Parent = items.viewportframe;
-            Name = "\0";
-            AnchorPoint = vec2(0, 1);
-            Position = dim2(0, 0, 1, -5);
-            Size = dim2(1, -10, 0, 20);
-            BackgroundTransparency = 1;
-            BorderSizePixel = 0;
-            ZIndex = 10;
-        });
-
-        local dropdown_section = setmetatable({holder = dropdown_holder}, library);
-
-        items.conditions_dropdown = dropdown_section:dropdown({
-            name = "Conditions",
-            items = {"None", "Visible", "Health", "Distance"},
-            default = "None",
-            flag = "esp_conditions_preview",
-        });
+			end
 
 			local objects = cfg.objects; do 
 				objects[ "holder" ] = library:create( "Frame" , {
