@@ -4006,12 +4006,13 @@
 				alpha_picker.Position = dim2(a, offset, 0, 0)
 
 				alpha_drag.BackgroundColor3 = Color3.fromHSV(h, s, v)
-				
 				visualize.BackgroundColor3 = Color
 				handler.BackgroundColor3 = Color 
-
 				colorpicker.BackgroundColor3 = Color3.fromHSV(h, 1, 1)
 				
+				visualize.BackgroundTransparency = 1 - a
+    			handler.BackgroundTransparency = 1 - a
+
 				cfg.color = Color
 				cfg.alpha = a
 				
@@ -4023,7 +4024,7 @@
     				Color = Color,
     				Transparency = a
 				}
-				
+
 				cfg.callback(Color, a)
 			end
 
