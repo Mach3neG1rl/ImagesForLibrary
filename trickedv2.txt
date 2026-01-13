@@ -1649,7 +1649,7 @@
 						end
 					end)
 
-					while task.wait(0.1) do
+					while task.wait(0) do
 						local ping = math.round(stats.Network.ServerStatsItem["Data Ping"]:GetValue())
 
 						watermark.change_text(string.format(
