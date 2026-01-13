@@ -4019,10 +4019,11 @@
 				local v_offset = (1 - v < 1) and 0 or -3
 				satval_picker_REAL.Position = dim2(s, s_offset, 1 - v, v_offset)
 
-				flags[cfg.flag] = {} 
-				flags[cfg.flag]["Color"] = Color
-				flags[cfg.flag]["Transparency"] = a
-			
+				flags[cfg.flag] = {
+    				Color = Color,
+    				Transparency = a
+				}
+				
 				cfg.callback(Color, a)
 			end
 
