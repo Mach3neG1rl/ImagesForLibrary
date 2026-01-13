@@ -1638,27 +1638,25 @@
     				local last_update = tick()
     				local frame_count = 0
     				local fps = 0
+    
+    			library:connection(run.RenderStepped, function()
+        			frame_count = frame_count + 1
 
-					library:connection(run.RenderStepped, function()
-						frame_count = frame_count + 1
+        			if tick() - last_update >= 1 then
+            			fps = frame_count
+            			frame_count = 0
+            			last_update = tick()
+        			end
 
-						if tick() - last_update >= 1 then
-							fps = frame_count
-							frame_count = 0
-							last_update = tick()
-						end
-					end)
-
-					while task.wait(0) do
-						local ping = math.round(stats.Network.ServerStatsItem["Data Ping"]:GetValue())
-
-						watermark.change_text(string.format(
-							'Tricked | %s | FPS: %d | Ping: %dms',
-							os.date('%B %d, %Y | Time: %H:%M:%S'),
-							fps,
-							ping
-					))
-				end
+        			local ping = math.round(stats.Network.ServerStatsItem["Data Ping"]:GetValue())
+        
+        			watermark.change_text(string.format(
+            			'Tricked | %s | FPS: %d | Ping: %dms',
+            			os.date('%B %d, %Y | %H:%M:%S'),
+            			fps,
+            			ping
+        			))
+    			end)
 			end)
 
 				local items = style.items
