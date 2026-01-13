@@ -1672,7 +1672,7 @@
 				local section = column:section({name = "Theme"})
 				section:label({name = "Accent"})
 				:colorpicker({name = "Accent", color = themes.preset.accent, flag = "accent", callback = function(color, alpha)
-					library:update_theme("accent", color, alpha)
+					library:update_theme("accent", color)
 				end, flag = "Accent"})
 				section:label({name = "Contrast"})
 				:colorpicker({name = "Low", color = themes.preset.low_contrast, flag = "low_contrast", callback = function(color)
