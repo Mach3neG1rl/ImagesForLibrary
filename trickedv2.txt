@@ -1836,7 +1836,6 @@
 			})
 
 			local items = holder.items
-			local column = setmetatable(items, library)
 
 			local espPreviewCreatorStore = setmetatable({
 				modelId = 133137826176671,
