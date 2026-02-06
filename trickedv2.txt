@@ -1827,7 +1827,6 @@
 			local insert_service = cloneref(game:GetService("InsertService"))
 
 			-- esp preview
-
 			local holder = library:panel({
 				name = "ESP Preview",
 				anchorpoint = vec2(0, 0),
@@ -1879,7 +1878,7 @@
 				self.model = result:Clone()
 				result:Destroy()
 				self.model.Parent = self.items.viewportframe
-	
+
 				local function disableScriptsRecursive(obj)
 					for _, child in pairs(obj:GetChildren()) do
 						if child:IsA("LocalScript") or child:IsA("Script") or child:IsA("ModuleScript") then
@@ -1951,8 +1950,6 @@
 
 			local preview = espPreviewCreatorStore
 			preview:init(items.holder)
-
-			-- 
 
 			-- playerlist 
 				local holder = library:panel({
