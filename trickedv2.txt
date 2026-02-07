@@ -62,40 +62,43 @@
 	local find = table.find 
 	local remove = table.remove
 	local concat = table.concat
--- 
 
--- library init
+	-- library init
 	local library = {
-		directory = "Tricked",
-		folders = {
-			"/fonts",
-			"/configs",
-			"/images"
-		},
+		directory = "Tricked\\",
+		folders = {"fonts", "configs", "images"},
 		flags = {},
-		config_flags = {},
-		visible_flags = {}, 
-		guis = {}, 
-		connections = {},   
+		configflags = {},
+		visibleflags = {},
+		guis = {},
+		connections = {},
 		notifications = {},
-		playerlist_data = {},
-
-		current_tab, 
-		current_element_open, 
-		dock_button_holder,  
-		old_config; 
-		font, 
-		keybind_list,
-		binds = {}, 
-		
-		copied_flag; 
-		is_rainbow;
-
-		instances = {}; 
-		drawings = {};
-
-		display_orders = 0; 
+		playerlistdata = {},
+		currenttab,
+		currentelementopen,
+		dockbuttonholder,
+		oldconfig,
+		font,
+		keybindlist,
+		binds = {}
 	}
+
+	for _, path in next, library.folders do
+		local fullPath = library.directory .. path
+		local success, err = pcall(function()
+			makefolder(fullPath)
+		end)
+		
+		if success then
+			if isfolder(fullPath) then
+				print("✓", fullPath)
+			else
+				warn("⚠", fullPath)
+			end
+		else
+			warn("✗", fullPath, err)
+		end
+	end
 
 	local flags = library.flags
 	local config_flags = library.config_flags
@@ -215,29 +218,64 @@
 		
 	library.__index = library
 
-	for _, path in next, library.folders do 
-		makefolder(library.directory .. path)
-	end 
+	print("Create")
+	for _, path in next, library.folders do
+		local fullPath = library.directory .. path
+		local success, err = pcall(function()
+			if not isfolder(fullPath) then
+				makefolder(fullPath)
+			end
+		end)
+		
+		if success and isfolder(fullPath) then
+			print("✓", fullPath)
+		else
+			warn("✗", fullPath, err or "notfound")
+		end
+	end
 
-	writefile("ffff.ttf", game:HttpGet("https://github.com/Mach3neG1rl/ImagesForLibrary/blob/main/fs-tahoma-8px.ttf"))
+	print("Donwloading...")
+	local fontSuccess = pcall(function()
+		local fontData = game:HttpGet("https://github.com/Mach3neG1rl/ImagesForLibrary/blob/main/fs-tahoma-8px.ttf")
+		writefile("ffff.ttf", fontData)
+		
+		task.wait(0.1)
+		
+		if not isfile("ffff.ttf") then
+			error("not created")
+		end
 
-	local tahoma = {
-		name = "SmallestPixel7",
-		faces = {
-			{
-				name = "Regular",
-				weight = 400,
-				style = "normal",
-				assetId = getcustomasset("ffff.ttf")
+		local tahoma = {
+			name = "SmallestPixel7",
+			faces = {
+				{
+					name = "Regular",
+					weight = 400,
+					style = "normal",
+					assetId = getcustomasset("ffff.ttf")
+				}
 			}
 		}
-	}
+		
+		writefile("dddd.ttf", http_service:JSONEncode(tahoma))
+		
+		task.wait(0.1)
+		
+		if not isfile("dddd.ttf") then
+			error("not created")
+		end
+		
+		library.font = Font.new(getcustomasset("dddd.ttf"), Enum.FontWeight.Regular)
+	end)
 
-	writefile("dddd.ttf", http_service:JSONEncode(tahoma))
+	if fontSuccess then
+		print("✓")
+	else
+		library.font = Font.fromEnum(Enum.Font.Ubuntu)
+		warn("⚠ default")
+	end
 
-	library.font = Font.new(getcustomasset("dddd.ttf"), Enum.FontWeight.Regular)
-
-	local config_holder 
+	local config_holder
 -- 
 
 -- library functions 
@@ -1824,45 +1862,131 @@
     			blur:Destroy()
 			end})
 					
+			local insert_service = cloneref(game:GetService("InsertService"))
+
 			-- esp preview
-			local problem_games = {
-    			286090429, -- Arsenal
-    			301549746, -- Counter Blox
-			}
-
-			local current_game = game.PlaceId
-			local disable_esp_preview = table.find(problem_games, current_game)
-
 			local holder = library:panel({
-    			name = "ESP Preview", 
-    			anchor_point = vec2(0, 0),
-    			size = dim2(0, 300, 0, 325),
-    			position = dim2(0, style.items.main_holder.AbsolutePosition.X, 0, style.items.main_holder.AbsolutePosition.Y + style.items.main_holder.AbsoluteSize.Y + 2),
-    			image = "rbxassetid://77684377836328",
-			})  
+				name = "ESP Preview",
+				anchorpoint = vec2(0, 0),
+				size = dim2(0, 300, 0, 325),
+				position = dim2(0, style.items.mainholder.AbsolutePosition.X, 0, style.items.mainholder.AbsolutePosition.Y + style.items.mainholder.AbsoluteSize.Y + 2),
+				image = "rbxassetid://77684377836328"
+			})
 
 			local items = holder.items
-			local column = setmetatable(items, library):column() 
-			window.esp_section = column:section({name = disable_esp_preview and "[Disabled cuz buggy]" or ""})
 
-			if disable_esp_preview then
-    			holder.items.sgui.Enabled = false
-    
+			local espPreviewCreatorStore = setmetatable({
+				modelId = 133137826176671,
+				rotationSpeed = 0.5,
+				cameraDistance = 7,
+				cameraHeight = 1.5,
+				items = {},
+				rotation = 0,
+				model = nil
+			}, {__index = library})
 
-    		function library:esp_preview(properties)
-        		return {
-            		refresh_elements = function() end,
-            		change_health = function() end,
-            		set_visible = function() end,
-            		items = {},
-            		rotation = 0,
-            		objects = {}
-        		}
-    			end
-			else
+			function espPreviewCreatorStore:init(parent)
+				self.items.viewportframe = library:create("ViewportFrame", {
+					Parent = parent or library.cache,
+					BackgroundTransparency = 0.1,
+					BackgroundColor3 = rgb(35, 35, 47),
+					Size = UDim2.new(1, 0, 0, 220),
+					Position = UDim2.new(0, 0, 0, 10),
+					BorderSizePixel = 0
+				})
 
+				self.items.camera = library:create("Camera", {
+					FieldOfView = 70,
+					CameraType = Enum.CameraType.Scriptable,
+					Parent = ws
+				})
+				
+				self.items.viewportframe.CurrentCamera = self.items.camera
+
+				local success, result = pcall(function()
+					return insert_service:LoadAsset(self.modelId)
+				end)
+				
+				if not success or not result then
+					warn("Ошибка загрузки модели")
+					return false
+				end
+
+				self.model = result:Clone()
+				result:Destroy()
+				self.model.Parent = self.items.viewportframe
+
+				local function disableScriptsRecursive(obj)
+					for _, child in pairs(obj:GetChildren()) do
+						if child:IsA("LocalScript") or child:IsA("Script") or child:IsA("ModuleScript") then
+							child:Destroy()
+						end
+						disableScriptsRecursive(child)
+					end
+				end
+				
+				disableScriptsRecursive(self.model)
+				
+				local rootPart = self.model:FindFirstChild("HumanoidRootPart")
+				if not rootPart then
+					local modelChild = self.model:FindFirstChildOfClass("Model")
+					if modelChild then
+						rootPart = modelChild:FindFirstChildOfClass("Part")
+					end
+					if not rootPart then
+						rootPart = self.model:FindFirstChildOfClass("Part")
+					end
+				end
+				
+				if rootPart then
+					self.rootPart = rootPart
+					self.items.camera.CameraSubject = rootPart
+				end
+
+				library:connection(run.RenderStepped, function()
+					if self.model and self.model.Parent and self.rootPart then
+						self.rotation = self.rotation + self.rotationSpeed
+						
+						local newCFrame = cfr(0, 0, -self.cameraDistance) * angle(0, rad(self.rotation), 0)
+						self.model:SetPrimaryPartCFrame(newCFrame)
+						
+						self.items.camera.CFrame = cfr(
+							sin(rad(self.rotation * 0.3)) * self.cameraDistance,
+							self.cameraHeight,
+							cos(rad(self.rotation * 0.3)) * self.cameraDistance
+						)
+					end
+				end)
+				
+				return true
 			end
-			-- 
+
+			function espPreviewCreatorStore:setRotationSpeed(speed)
+				self.rotationSpeed = speed
+			end
+
+			function espPreviewCreatorStore:setCameraDistance(distance)
+				self.cameraDistance = distance
+			end
+
+			function espPreviewCreatorStore:setCameraHeight(height)
+				self.cameraHeight = height
+			end
+
+			function espPreviewCreatorStore:setVisible(bool)
+				if self.items.viewportframe then
+					self.items.viewportframe.Visible = bool
+				end
+			end
+
+			function espPreviewCreatorStore:destroy()
+				if self.model then self.model:Destroy() end
+				if self.items.viewportframe then self.items.viewportframe:Destroy() end
+				if self.items.camera then self.items.camera:Destroy() end
+			end
+
+			local preview = espPreviewCreatorStore
+			preview:init(items.holder)
 
 			-- playerlist 
 				local holder = library:panel({
